@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - SAPS Industries</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;550;600;650;700;750&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script>try{if(localStorage.getItem('theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+</head>
+<body class="login-page">
+    <button class="theme-toggle theme-toggle-fixed" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle light/dark">
+        <i class="fas fa-moon"></i>
+    </button>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="logo">SAPS Industries</div>
+                <h1>Welcome back</h1>
+                <p>Sign in to your account to continue</p>
+            </div>
+            
+            <form class="login-form" onsubmit="handleLogin(event)">
+                <div class="form-group float-field">
+                    <input type="email" id="email" placeholder=" " required>
+                    <label for="email">Email address</label>
+                </div>
+                
+                <div class="form-group float-field">
+                    <input type="password" id="password" placeholder=" " required>
+                    <label for="password">Password</label>
+                </div>
+                
+                <div class="form-footer">
+                    <label class="checkbox-label">
+                        <input type="checkbox">
+                        <span>Remember me</span>
+                    </label>
+                    <a href="#" class="link">Forgot password?</a>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-large">Sign in</button>
+            </form>
+            
+            <div class="login-footer">
+                <p>Don't have an account? <a href="#" class="link">Contact sales</a></p>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

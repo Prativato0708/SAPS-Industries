@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Quotation - SAPS Industries</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;550;600;650;700;750&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script>try{if(localStorage.getItem('theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+</head>
+<body>
+    <div class="app-container" id="appContainer">
+    <script>try{if(localStorage.getItem('sidebarCollapsed')==='1')document.getElementById('appContainer').classList.add('collapsed');}catch(e){}</script>
+        <!-- Sidebar (shared/canonical) -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">SAPS</div>
+                <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Toggle sidebar">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M3 10h14M3 5h14M3 15h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Pages</div>
+                    <a href="dashboard.html" class="nav-item">
+                        <i class="fas fa-th-large"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="quotations.html" class="nav-item active">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Quotations</span>
+                    </a>
+                    <a href="orders.html" class="nav-item">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Orders</span>
+                    </a>
+                    <a href="materials.html" class="nav-item">
+                        <i class="fas fa-cubes"></i>
+                        <span>Materials</span>
+                    </a>
+                    <a href="inventory.html" class="nav-item">
+                        <i class="fas fa-boxes"></i>
+                        <span>Inventory</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <i class="fas fa-truck"></i>
+                        <span>Shipments</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Reports</span>
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">UI Elements</div>
+                    <a href="#" class="nav-item">
+                        <i class="fas fa-table"></i>
+                        <span>Tables</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Charts</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <i class="fas fa-wpforms"></i>
+                        <span>Forms</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Documentation &amp; Support</div>
+                    <a href="#" class="nav-item">
+                        <i class="fas fa-book"></i>
+                        <span>Documentation</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <i class="fas fa-headset"></i>
+                        <span>Support</span>
+                    </a>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-menu">
+                    <div class="avatar">JD</div>
+                    <div class="user-info">
+                        <div class="user-name">John Doe</div>
+                        <div class="user-email">Administrator</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="page-header">
+                <div>
+                    <h1 class="page-title">Create New Quotation</h1>
+                    <p class="page-subtitle">Fill in the details to generate a quotation</p>
+                </div>
+                <div class="header-actions">
+                    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle light/dark">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button class="btn btn-secondary" onclick="window.location.href='quotations.html'">Cancel</button>
+                </div>
+            </header>
+            
+            <!-- Stepper -->
+            <div class="stepper">
+                <div class="step active" data-step="1">
+                    <div class="step-indicator">
+                        <div class="step-number">1</div>
+                    </div>
+                    <div class="step-content">
+                        <div class="step-title">Enquiry Details</div>
+                        <div class="step-desc">Basic information</div>
+                    </div>
+                </div>
+                
+                <div class="step-line"></div>
+                
+                <div class="step" data-step="2">
+                    <div class="step-indicator">
+                        <div class="step-number">2</div>
+                    </div>
+                    <div class="step-content">
+                        <div class="step-title">Product Specifications</div>
+                        <div class="step-desc">Add products</div>
+                    </div>
+                </div>
+                
+                <div class="step-line"></div>
+                
+                <div class="step" data-step="3">
+                    <div class="step-indicator">
+                        <div class="step-number">3</div>
+                    </div>
+                    <div class="step-content">
+                        <div class="step-title">Delivery & Validation</div>
+                        <div class="step-desc">Terms & conditions</div>
+                    </div>
+                </div>
+                
+                <div class="step-line"></div>
+                
+                <div class="step" data-step="4">
+                    <div class="step-indicator">
+                        <div class="step-number">4</div>
+                    </div>
+                    <div class="step-content">
+                        <div class="step-title">Payment Terms</div>
+                        <div class="step-desc">Billing terms</div>
+                    </div>
+                </div>
+                
+                <div class="step-line"></div>
+                
+                <div class="step" data-step="5">
+                    <div class="step-indicator">
+                        <div class="step-number">5</div>
+                    </div>
+                    <div class="step-content">
+                        <div class="step-title">Review & Confirm</div>
+                        <div class="step-desc">Final review</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Form Steps -->
+            <form id="quotationForm">
+                <!-- Step 1: Enquiry Details -->
+                <div class="form-step active" id="step1">
+                    <div class="card">
+                        <div class="card-section">
+                            <h3 class="section-title">Organisation Details</h3>
+                            <p style="font-size:13px;color:var(--text-muted);margin:-12px 0 20px;">Details of the organisation the quotation request came from.</p>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="orgName">Organisation Name *</label>
+                                    <input type="text" id="orgName" placeholder="Enter organisation name" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="orgType">Industry / Type</label>
+                                    <select id="orgType">
+                                        <option value="">Select industry</option>
+                                        <option value="Manufacturing">Manufacturing</option>
+                                        <option value="Automotive">Automotive</option>
+                                        <option value="Construction">Construction</option>
+                                        <option value="Engineering">Engineering</option>
+                                        <option value="Aerospace">Aerospace</option>
+                                        <option value="Energy">Energy &amp; Power</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="orgEmail">Organisation Email</label>
+                                    <input type="email" id="orgEmail" placeholder="info@organisation.com">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="orgPhone">Organisation Phone</label>
+                                    <input type="tel" id="orgPhone" placeholder="+91 22 1234 5678">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="orgAddress">Organisation Address</label>
+                                <textarea id="orgAddress" rows="3" placeholder="Enter organisation address"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="card-section">
+                            <h3 class="section-title">Organisation POC</h3>
+                            <p style="font-size:13px;color:var(--text-muted);margin:-12px 0 20px;">Point of contact at the organisation for this quotation.</p>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="pocName">POC Name *</label>
+                                    <input type="text" id="pocName" placeholder="Enter contact person's name" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="pocDesignation">Designation</label>
+                                    <input type="text" id="pocDesignation" placeholder="e.g., Procurement Manager">
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="pocEmail">POC Email *</label>
+                                    <input type="email" id="pocEmail" placeholder="poc@organisation.com" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="pocPhone">POC Contact Number *</label>
+                                    <input type="tel" id="pocPhone" placeholder="+91 98765 43210" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card-section">
+                            <h3 class="section-title">Quotation Details</h3>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="quotationDate">Quotation Date *</label>
+                                    <input type="date" id="quotationDate" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="validUntil">Valid Until *</label>
+                                    <input type="date" id="validUntil" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="enquiryNumber">Enquiry Number</label>
+                                <input type="text" id="enquiryNumber" placeholder="ENQ-2024-001">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="notes">Additional Notes</label>
+                                <textarea id="notes" rows="3" placeholder="Any special instructions or requirements"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Step 2: Product Specifications -->
+                <div class="form-step" id="step2">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Products</h3>
+                            <button type="button" class="btn btn-primary" onclick="openProductModal()">
+                                <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+                                    <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" fill="currentColor"/>
+                                </svg>
+                                Add Product
+                            </button>
+                        </div>
+                        
+                        <div class="table-container">
+                            <table class="table" id="productsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Product Name</th>
+                                        <th>Material</th>
+                                        <th>Specifications</th>
+                                        <th>Quantity</th>
+                                        <th>Unit Price</th>
+                                        <th>Total</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="productsTableBody">
+                                    <tr>
+                                        <td colspan="7" class="empty-state">
+                                            <svg width="48" height="48" viewBox="0 0 20 20" fill="none">
+                                                <path fill-rule="evenodd" d="M5 3a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2V5a2 2 0 00-2-2H5zm0 2h10v7h-2l-1 2H8l-1-2H5V5z" fill="currentColor" opacity="0.3"/>
+                                            </svg>
+                                            <p>No products added yet</p>
+                                            <button type="button" class="btn btn-secondary btn-sm" onclick="openProductModal()">Add First Product</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="pricing-summary" id="pricingSummary" style="display: none;">
+                            <div class="summary-row">
+                                <span>Subtotal:</span>
+                                <span id="subtotal">₹0</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>GST (18%):</span>
+                                <span id="gst">₹0</span>
+                            </div>
+                            <div class="summary-row summary-total">
+                                <span>Total Amount:</span>
+                                <span id="total">₹0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Step 3: Delivery & Validation -->
+                <div class="form-step" id="step3">
+                    <div class="card">
+                        <div class="card-section">
+                            <h3 class="section-title">Delivery Information</h3>
+                            
+                            <div class="form-group delivery-schedule-row">
+                                <label>Delivery Schedule *</label>
+                                <div class="delivery-mode-toggle" role="group" aria-label="Delivery schedule">
+                                    <button type="button" class="delivery-mode-btn active" data-mode="full" onclick="setDeliveryMode('full')">
+                                        <i class="fas fa-box"></i> Full delivery on completion
+                                    </button>
+                                    <button type="button" class="delivery-mode-btn" data-mode="phase" onclick="setDeliveryMode('phase')">
+                                        <i class="fas fa-layer-group"></i> Phase-wise delivery
+                                    </button>
+                                </div>
+                                <input type="hidden" id="deliveryMode" value="full">
+                            </div>
+
+                            <div id="fullDeliveryFields">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="deliveryDate">Expected Delivery Date *</label>
+                                    <input type="date" id="deliveryDate" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="deliveryMethod">Delivery Method *</label>
+                                    <select id="deliveryMethod" required>
+                                        <option value="">Select delivery method</option>
+                                        <option value="courier">Courier Service</option>
+                                        <option value="own">Own Transport</option>
+                                        <option value="pickup">Client Pickup</option>
+                                        <option value="freight">Freight Forwarding</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="deliveryAddress">Delivery Address *</label>
+                                <textarea id="deliveryAddress" rows="3" placeholder="Enter delivery address" required></textarea>
+                            </div>
+                            </div>
+
+                            <div class="phase-section" id="phaseSection" style="display: none;">
+                                <div class="phase-section-head">
+                                    <div>
+                                        <div class="phase-section-title">Delivery Phases</div>
+                                        <div class="phase-section-sub">Select a product, quantity and the estimated time to manufacture for each phase.</div>
+                                    </div>
+                                    <button type="button" class="btn btn-secondary btn-sm" onclick="addPhase()">
+                                        <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+                                            <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" fill="currentColor"/>
+                                        </svg>
+                                        Add Phase
+                                    </button>
+                                </div>
+                                <div class="table-container">
+                                    <table class="table" id="phasesTable">
+                                        <thead>
+                                            <tr>
+                                                <th style="width:90px;">Phase</th>
+                                                <th>Product</th>
+                                                <th style="width:120px;">Quantity</th>
+                                                <th style="width:220px;">Est. Manufacturing Time</th>
+                                                <th style="width:60px;">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="phasesTableBody"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card-section">
+                            <h3 class="section-title">Quality & Validation</h3>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="qaRequired">QA Testing Required</label>
+                                    <select id="qaRequired">
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="certifications">Certifications Required</label>
+                                    <input type="text" id="certifications" placeholder="e.g., ISO, CE, etc.">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="specialRequirements">Special Requirements</label>
+                                <textarea id="specialRequirements" rows="3" placeholder="Any special quality or testing requirements"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="card-section">
+                            <h3 class="section-title">Terms & Conditions</h3>
+                            
+                            <div class="form-group">
+                                <label for="terms">Terms & Conditions *</label>
+                                <textarea id="terms" rows="5" required>1. This quotation is valid for 30 days from the date of issue.
+2. Prices are subject to change without prior notice.
+3. Delivery time is approximate and may vary.
+4. Payment terms as specified above must be adhered to.
+5. Any modification to the order will require a revised quotation.</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Step 4: Payment Terms -->
+                <div class="form-step" id="step4">
+                    <div class="card">
+                        <div class="card-section">
+                            <h3 class="section-title">Payment Terms</h3>
+                            <p style="font-size:13px;color:var(--text-muted);margin:-12px 0 20px;">Define how and when the client will be billed for this quotation.</p>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="paymentTerms">Payment Terms *</label>
+                                    <select id="paymentTerms" required>
+                                        <option value="">Select payment terms</option>
+                                        <option value="advance">100% Advance</option>
+                                        <option value="50-50">50% Advance, 50% on Delivery</option>
+                                        <option value="30-70">30% Advance, 70% on Delivery</option>
+                                        <option value="net30">Net 30 Days</option>
+                                        <option value="net60">Net 60 Days</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="paymentMode">Preferred Payment Mode</label>
+                                    <select id="paymentMode">
+                                        <option value="">Select payment mode</option>
+                                        <option value="bank">Bank Transfer / NEFT</option>
+                                        <option value="cheque">Cheque</option>
+                                        <option value="upi">UPI</option>
+                                        <option value="lc">Letter of Credit</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="paymentNotes">Payment Notes</label>
+                                <textarea id="paymentNotes" rows="3" placeholder="Any specific billing instructions, taxes, or milestones"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 5: Review & Confirm -->
+                <div class="form-step" id="step5">
+                    <div class="card">
+                        <div class="review-section">
+                            <h3 class="section-title">Quotation Summary</h3>
+                            
+                            <div class="review-grid">
+                                <div class="review-block">
+                                    <h4>Organisation</h4>
+                                    <dl>
+                                        <dt>Name:</dt>
+                                        <dd id="reviewOrgName">-</dd>
+
+                                        <dt>Industry:</dt>
+                                        <dd id="reviewOrgType">-</dd>
+
+                                        <dt>Email:</dt>
+                                        <dd id="reviewOrgEmail">-</dd>
+
+                                        <dt>Phone:</dt>
+                                        <dd id="reviewOrgPhone">-</dd>
+                                    </dl>
+                                </div>
+
+                                <div class="review-block">
+                                    <h4>Organisation POC</h4>
+                                    <dl>
+                                        <dt>Name:</dt>
+                                        <dd id="reviewPocName">-</dd>
+
+                                        <dt>Designation:</dt>
+                                        <dd id="reviewPocDesignation">-</dd>
+
+                                        <dt>Email:</dt>
+                                        <dd id="reviewPocEmail">-</dd>
+
+                                        <dt>Contact:</dt>
+                                        <dd id="reviewPocPhone">-</dd>
+                                    </dl>
+                                </div>
+
+                                <div class="review-block">
+                                    <h4>Quotation Details</h4>
+                                    <dl>
+                                        <dt>Quotation Date:</dt>
+                                        <dd id="reviewQuotationDate">-</dd>
+                                        
+                                        <dt>Valid Until:</dt>
+                                        <dd id="reviewValidUntil">-</dd>
+                                        
+                                        <dt>Payment Terms:</dt>
+                                        <dd id="reviewPaymentTerms">-</dd>
+                                        
+                                        <dt>Delivery Date:</dt>
+                                        <dd id="reviewDeliveryDate">-</dd>
+
+                                        <dt>Delivery Schedule:</dt>
+                                        <dd id="reviewDeliverySchedule">-</dd>
+                                    </dl>
+                                </div>
+                            </div>
+                            
+                            <div class="review-products">
+                                <h4>Products</h4>
+                                <div id="reviewProductsList"></div>
+                            </div>
+
+                            <div class="review-products" id="reviewPhasesWrap" style="display: none;">
+                                <h4>Delivery Phases</h4>
+                                <div id="reviewPhasesList"></div>
+                            </div>
+                            
+                            <div class="review-total">
+                                <div class="total-row">
+                                    <span>Subtotal:</span>
+                                    <span id="reviewSubtotal">₹0</span>
+                                </div>
+                                <div class="total-row">
+                                    <span>GST (18%):</span>
+                                    <span id="reviewGst">₹0</span>
+                                </div>
+                                <div class="total-row total-final">
+                                    <span>Total Amount:</span>
+                                    <span id="reviewTotal">₹0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Navigation Buttons -->
+                <div class="form-navigation">
+                    <button type="button" class="btn btn-secondary" id="prevBtn" onclick="changeStep(-1)" style="display: none;">
+                        <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+                            <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" fill="currentColor"/>
+                        </svg>
+                        Previous
+                    </button>
+                    
+                    <div class="nav-spacer"></div>
+                    
+                    <button type="button" class="btn btn-primary" id="nextBtn" onclick="changeStep(1)">
+                        Next
+                        <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" fill="currentColor"/>
+                        </svg>
+                    </button>
+                    
+                    <button type="submit" class="btn btn-primary" id="submitBtn" style="display: none;">
+                        <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" fill="currentColor"/>
+                        </svg>
+                        Create Quotation
+                    </button>
+                </div>
+            </form>
+        </main>
+    </div>
+    
+    <!-- Add Product Modal -->
+    <div class="modal" id="productModal">
+        <div class="modal-overlay" onclick="closeProductModal()"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Product</h3>
+                <button class="modal-close" onclick="closeProductModal()">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" fill="currentColor"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <form id="productForm" onsubmit="addProduct(event)">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="productName">Product Name *</label>
+                        <select id="productName" required>
+                            <option value="">Select a product</option>
+                            <option value="Machined Component">Machined Component</option>
+                            <option value="Sheet Metal Fabrication">Sheet Metal Fabrication</option>
+                            <option value="Welded Assembly">Welded Assembly</option>
+                            <option value="CNC Turned Part">CNC Turned Part</option>
+                            <option value="Casting">Casting</option>
+                            <option value="Forging">Forging</option>
+                            <option value="Pipe & Tube Fitting">Pipe &amp; Tube Fitting</option>
+                            <option value="Structural Steel">Structural Steel</option>
+                            <option value="Fastener">Fastener</option>
+                            <option value="Custom Component">Custom Component</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="material">Material *</label>
+                        <select id="material" required>
+                            <option value="">Select material</option>
+                            <option value="Stainless Steel 304">Stainless Steel 304</option>
+                            <option value="Stainless Steel 316">Stainless Steel 316</option>
+                            <option value="Aluminum 6061">Aluminum 6061</option>
+                            <option value="Mild Steel">Mild Steel</option>
+                            <option value="Brass">Brass</option>
+                            <option value="Copper">Copper</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="specifications">Specifications</label>
+                        <textarea id="specifications" rows="3" placeholder="Size, dimensions, finish, etc."></textarea>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="quantity">Quantity *</label>
+                            <input type="number" id="quantity" placeholder="0" min="1" required oninput="calculateProductTotal()">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="unitPrice">Unit Price (₹) *</label>
+                            <input type="number" id="unitPrice" placeholder="0.00" min="0" step="0.01" required oninput="calculateProductTotal()">
+                        </div>
+                    </div>
+                    
+                    <div class="product-total">
+                        <span>Product Total:</span>
+                        <span id="productTotal">₹0.00</span>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeProductModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Success Modal -->
+    <div class="modal" id="successModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content modal-sm">
+            <div class="success-modal-body">
+                <div class="success-icon">
+                    <svg width="32" height="32" viewBox="0 0 20 20" fill="none">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" fill="currentColor"/>
+                    </svg>
+                </div>
+                <h3>Quotation Created</h3>
+                <p>Your quotation has been created successfully and added to your quotations list.</p>
+                <button type="button" class="btn btn-primary btn-large" onclick="goToQuotations()">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
