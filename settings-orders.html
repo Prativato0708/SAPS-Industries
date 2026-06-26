@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders Settings - SAPS Industries</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;550;600;650;700;750&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script>try{if(localStorage.getItem('theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+</head>
+<body>
+    <div class="app-container" id="appContainer">
+    <script>try{if(localStorage.getItem('sidebarCollapsed')==='1')document.getElementById('appContainer').classList.add('collapsed');}catch(e){}</script>
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">SAPS <span class="logo-sub">Industries</span></div>
+                <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Toggle sidebar">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M3 10h14M3 5h14M3 15h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Enterprise Section</div>
+                    <a href="dashboard.html" class="nav-item"><i class="fas fa-th-large"></i><span>Dashboard</span></a>
+                    <a href="quotations.html" class="nav-item"><i class="fas fa-file-alt"></i><span>Quotations</span></a>
+                    <a href="orders.html" class="nav-item"><i class="fas fa-shopping-cart"></i><span>Orders</span></a>
+                    <a href="#" class="nav-item"><i class="fas fa-truck"></i><span>Shipments</span></a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Internal Section</div>
+                    <a href="materials.html" class="nav-item"><i class="fas fa-cubes"></i><span>Material Management</span></a>
+                    <a href="inventory.html" class="nav-item"><i class="fas fa-boxes"></i><span>Inventory</span></a>
+                    <a href="settings.html" class="nav-item active"><i class="fas fa-cog"></i><span>Settings</span></a>
+                </div>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-menu">
+                    <div class="avatar">SM</div>
+                    <div class="user-info">
+                        <div class="user-name">Mr. Suvendu M</div>
+                        <div class="user-email">Administrator</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content" id="settingsRoot">
+            <header class="page-header">
+                <div>
+                    <h1 class="page-title">Orders Settings</h1>
+                    <p class="page-subtitle">Defaults applied when quotations are converted into production orders</p>
+                </div>
+                <div class="header-actions">
+                    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle light/dark">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button class="btn btn-secondary" onclick="window.location.href='settings.html'">
+                        <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" fill="currentColor"/></svg>
+                        Back to Settings
+                    </button>
+                </div>
+            </header>
+
+            <div class="card set-card" id="set_orders">
+                <div class="card-section">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="set_ord_prefix">Order ID Prefix</label>
+                            <input type="text" id="set_ord_prefix" placeholder="ORD-2026-">
+                        </div>
+                        <div class="form-group">
+                            <label for="set_ord_next">Next Order Number</label>
+                            <input type="number" id="set_ord_next" min="1" placeholder="21">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="set_ord_lead">Default Lead Time (days)</label>
+                            <input type="number" id="set_ord_lead" min="0" placeholder="21">
+                        </div>
+                        <div class="form-group">
+                            <label for="set_ord_startprog">Progress on Start (%)</label>
+                            <input type="number" id="set_ord_startprog" min="0" max="100" placeholder="5">
+                        </div>
+                    </div>
+                    <div class="set-toggles">
+                        <div class="set-row">
+                            <div class="set-row-text">
+                                <div class="set-row-label">Require completion date before starting</div>
+                                <div class="set-row-desc">Block "Start Order" until a tentative completion date is set.</div>
+                            </div>
+                            <label class="switch"><input type="checkbox" id="set_ord_reqdate"><span class="switch-slider"></span></label>
+                        </div>
+                        <div class="set-row">
+                            <div class="set-row-text">
+                                <div class="set-row-label">Warn on insufficient raw material stock</div>
+                                <div class="set-row-desc">Flag order materials whose required quantity exceeds current stock.</div>
+                            </div>
+                            <label class="switch"><input type="checkbox" id="set_ord_warnstock"><span class="switch-slider"></span></label>
+                        </div>
+                        <div class="set-row">
+                            <div class="set-row-text">
+                                <div class="set-row-label">Lock products from the linked quotation</div>
+                                <div class="set-row-desc">Prevent editing product names and quantities once an order is created.</div>
+                            </div>
+                            <label class="switch"><input type="checkbox" id="set_ord_lockproducts"><span class="switch-slider"></span></label>
+                        </div>
+                    </div>
+                    <div class="set-card-foot">
+                        <span class="set-msg" id="set_ord_msg"></span>
+                        <button type="button" class="btn btn-primary" onclick="saveOrdersSettings()">Save Order Settings</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Order Settings Updated Modal -->
+    <div class="modal" id="orderSavedModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content modal-sm">
+            <div class="success-modal-body">
+                <div class="success-icon">
+                    <svg width="32" height="32" viewBox="0 0 20 20" fill="none">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" fill="currentColor"/>
+                    </svg>
+                </div>
+                <h3>Order Settings Updated</h3>
+                <p>Your order settings have been saved successfully.</p>
+                <button type="button" class="btn btn-primary btn-large" onclick="window.location.href='settings.html'">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders - SAPS Industries</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;550;600;650;700;750&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script>try{if(localStorage.getItem('theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+</head>
+<body>
+    <div class="app-container" id="appContainer">
+    <script>try{if(localStorage.getItem('sidebarCollapsed')==='1')document.getElementById('appContainer').classList.add('collapsed');}catch(e){}</script>
+        <!-- Sidebar (shared/canonical) -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">SAPS <span class="logo-sub">Industries</span></div>
+                <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Toggle sidebar">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M3 10h14M3 5h14M3 15h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Enterprise Section</div>
+                    <a href="dashboard.html" class="nav-item">
+                        <i class="fas fa-th-large"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="quotations.html" class="nav-item">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Quotations</span>
+                    </a>
+                    <a href="orders.html" class="nav-item active">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Orders</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <i class="fas fa-truck"></i>
+                        <span>Shipments</span>
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Internal Section</div>
+                    <a href="materials.html" class="nav-item">
+                        <i class="fas fa-cubes"></i>
+                        <span>Material Management</span>
+                    </a>
+                    <a href="inventory.html" class="nav-item">
+                        <i class="fas fa-boxes"></i>
+                        <span>Inventory</span>
+                    </a>
+                    <a href="settings.html" class="nav-item">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </a>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-menu">
+                    <div class="avatar">SM</div>
+                    <div class="user-info">
+                        <div class="user-name">Mr. Suvendu M</div>
+                        <div class="user-email">Administrator</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="page-header">
+                <div>
+                    <h1 class="page-title">Orders</h1>
+                    <p class="page-subtitle">Track ongoing, completed and upcoming production orders</p>
+                </div>
+                <div class="header-actions">
+                    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle light/dark">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Ongoing Orders -->
+            <section class="orders-section">
+                <div class="orders-section-head">
+                    <h2 class="section-title">Ongoing Orders</h2>
+                    <span class="orders-count" id="ongoingCount">3</span>
+                </div>
+                <div class="orders-grid" id="ongoingGrid">
+                    <div class="card order-card" data-status="ongoing" onclick="openOrderDetails(this)"
+                         data-order="ORD-2026-018" data-client="Acme Manufacturing Co."
+                         data-product="Machined Component — SS 304" data-quotation="Q-2024-043"
+                         data-qty="500 units" data-progress="65" data-complete="Jul 18, 2026"
+                         data-raw="Stainless Steel 304 sheet — 1.2 T; M8 fasteners — 1,000 pcs; Cutting fluid — 40 L">
+                        <div class="quotation-header">
+                            <div>
+                                <div class="quotation-id">ORD-2026-018</div>
+                                <div class="quotation-client">Acme Manufacturing Co.</div>
+                            </div>
+                            <span class="badge badge-warning">In Progress</span>
+                        </div>
+                        <div class="quotation-body">
+                            <div class="order-specs">
+                                <div class="order-spec"><span>Product</span><strong>Machined Component — SS 304</strong></div>
+                                <div class="order-spec"><span>Quotation</span><strong>Q-2024-043</strong></div>
+                                <div class="order-spec"><span>Quantity</span><strong>500 units</strong></div>
+                            </div>
+                            <div class="order-progress">
+                                <div class="order-progress-head">
+                                    <span>Production Progress</span>
+                                    <span class="order-progress-pct">65%</span>
+                                </div>
+                                <div class="progress-track"><div class="progress-fill" style="width:65%"></div></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card order-card" data-status="ongoing" onclick="openOrderDetails(this)"
+                         data-order="ORD-2026-017" data-client="Tech Industries Ltd."
+                         data-product="Aluminum Extrusion — 6061" data-quotation="Q-2024-042"
+                         data-qty="300 units" data-progress="40" data-complete="Jul 22, 2026"
+                         data-raw="Aluminum 6061 billet — 0.9 T; Anodizing chemicals — 60 L; Protective packaging">
+                        <div class="quotation-header">
+                            <div>
+                                <div class="quotation-id">ORD-2026-017</div>
+                                <div class="quotation-client">Tech Industries Ltd.</div>
+                            </div>
+                            <span class="badge badge-warning">In Progress</span>
+                        </div>
+                        <div class="quotation-body">
+                            <div class="order-specs">
+                                <div class="order-spec"><span>Product</span><strong>Aluminum Extrusion — 6061</strong></div>
+                                <div class="order-spec"><span>Quotation</span><strong>Q-2024-042</strong></div>
+                                <div class="order-spec"><span>Quantity</span><strong>300 units</strong></div>
+                            </div>
+                            <div class="order-progress">
+                                <div class="order-progress-head">
+                                    <span>Production Progress</span>
+                                    <span class="order-progress-pct">40%</span>
+                                </div>
+                                <div class="progress-track"><div class="progress-fill" style="width:40%"></div></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card order-card" data-status="ongoing" onclick="openOrderDetails(this)"
+                         data-order="ORD-2026-016" data-client="Supreme Engineering"
+                         data-product="Welded Assembly — Mild Steel" data-quotation="Q-2024-040"
+                         data-qty="750 units" data-progress="85" data-complete="Jul 8, 2026"
+                         data-raw="Mild steel plate — 3.5 T; MIG welding wire — 120 kg; Primer paint — 80 L">
+                        <div class="quotation-header">
+                            <div>
+                                <div class="quotation-id">ORD-2026-016</div>
+                                <div class="quotation-client">Supreme Engineering</div>
+                            </div>
+                            <span class="badge badge-warning">In Progress</span>
+                        </div>
+                        <div class="quotation-body">
+                            <div class="order-specs">
+                                <div class="order-spec"><span>Product</span><strong>Welded Assembly — Mild Steel</strong></div>
+                                <div class="order-spec"><span>Quotation</span><strong>Q-2024-040</strong></div>
+                                <div class="order-spec"><span>Quantity</span><strong>750 units</strong></div>
+                            </div>
+                            <div class="order-progress">
+                                <div class="order-progress-head">
+                                    <span>Production Progress</span>
+                                    <span class="order-progress-pct">85%</span>
+                                </div>
+                                <div class="progress-track"><div class="progress-fill" style="width:85%"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Completed Orders -->
+            <section class="orders-section">
+                <div class="orders-section-head">
+                    <h2 class="section-title">Completed Orders</h2>
+                    <span class="orders-count" id="completedCount">2</span>
+                </div>
+                <div class="orders-grid" id="completedGrid">
+                    <div class="card order-card" data-status="completed" onclick="openOrderDetails(this)"
+                         data-order="ORD-2026-012" data-client="Global Parts Inc."
+                         data-product="CNC Turned Part — Brass" data-quotation="Q-2024-038"
+                         data-qty="1,200 units" data-progress="100" data-complete="Jun 10, 2026"
+                         data-raw="Brass rod (CZ121) — 1.1 T; Cutting coolant — 50 L; Deburring media — 25 kg">
+                        <div class="quotation-header">
+                            <div>
+                                <div class="quotation-id">ORD-2026-012</div>
+                                <div class="quotation-client">Global Parts Inc.</div>
+                            </div>
+                            <span class="badge badge-success">Completed</span>
+                        </div>
+                        <div class="quotation-body">
+                            <div class="order-specs">
+                                <div class="order-spec"><span>Product</span><strong>CNC Turned Part — Brass</strong></div>
+                                <div class="order-spec"><span>Quotation</span><strong>Q-2024-038</strong></div>
+                                <div class="order-spec"><span>Quantity</span><strong>1,200 units</strong></div>
+                            </div>
+                            <div class="order-progress">
+                                <div class="order-progress-head">
+                                    <span>Production Progress</span>
+                                    <span class="order-progress-pct">100%</span>
+                                </div>
+                                <div class="progress-track"><div class="progress-fill done" style="width:100%"></div></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card order-card" data-status="completed" onclick="openOrderDetails(this)"
+                         data-order="ORD-2026-009" data-client="Pioneer Fabricators"
+                         data-product="Structural Steel Beam" data-quotation="Q-2024-031"
+                         data-qty="180 units" data-progress="100" data-complete="May 28, 2026"
+                         data-raw="Structural steel I-beam — 6.2 T; Anti-rust coating — 90 L; HT bolts — 720 pcs">
+                        <div class="quotation-header">
+                            <div>
+                                <div class="quotation-id">ORD-2026-009</div>
+                                <div class="quotation-client">Pioneer Fabricators</div>
+                            </div>
+                            <span class="badge badge-success">Completed</span>
+                        </div>
+                        <div class="quotation-body">
+                            <div class="order-specs">
+                                <div class="order-spec"><span>Product</span><strong>Structural Steel Beam</strong></div>
+                                <div class="order-spec"><span>Quotation</span><strong>Q-2024-031</strong></div>
+                                <div class="order-spec"><span>Quantity</span><strong>180 units</strong></div>
+                            </div>
+                            <div class="order-progress">
+                                <div class="order-progress-head">
+                                    <span>Production Progress</span>
+                                    <span class="order-progress-pct">100%</span>
+                                </div>
+                                <div class="progress-track"><div class="progress-fill done" style="width:100%"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Upcoming Orders -->
+            <section class="orders-section">
+                <div class="orders-section-head">
+                    <h2 class="section-title">Upcoming Orders</h2>
+                    <span class="orders-count" id="upcomingCount">2</span>
+                </div>
+                <div class="orders-grid" id="upcomingGrid">
+                    <div class="card order-card" data-status="upcoming" onclick="openOrderDetails(this)"
+                         data-order="ORD-2026-019" data-client="Nova Energy Systems"
+                         data-product="Casting — SS 316" data-quotation="Q-2024-045"
+                         data-qty="250 units" data-progress="0" data-start="Jul 5, 2026" data-complete="Jul 25, 2026"
+                         data-raw="Stainless Steel 316 ingots — 2.0 T; Mold sand — 1.5 T; Foundry flux — 30 kg">
+                        <div class="quotation-header">
+                            <div>
+                                <div class="quotation-id">ORD-2026-019</div>
+                                <div class="quotation-client">Nova Energy Systems</div>
+                            </div>
+                            <span class="badge badge-info">Scheduled</span>
+                        </div>
+                        <div class="quotation-body">
+                            <div class="order-specs">
+                                <div class="order-spec"><span>Product</span><strong>Casting — SS 316</strong></div>
+                                <div class="order-spec"><span>Quotation</span><strong>Q-2024-045</strong></div>
+                                <div class="order-spec"><span>Starts</span><strong>Jul 5, 2026</strong></div>
+                            </div>
+                            <div class="order-progress">
+                                <div class="order-progress-head">
+                                    <span>Production Progress</span>
+                                    <span class="order-progress-pct">0%</span>
+                                </div>
+                                <div class="progress-track"><div class="progress-fill idle" style="width:0%"></div></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card order-card" data-status="upcoming" onclick="openOrderDetails(this)"
+                         data-order="ORD-2026-020" data-client="Apex Automotive"
+                         data-product="Forging — Mild Steel" data-quotation="Q-2024-046"
+                         data-qty="400 units" data-progress="0" data-start="Jul 12, 2026" data-complete="Aug 1, 2026"
+                         data-raw="Mild steel billet — 2.8 T; Die lubricant — 40 L; Heat-treatment salts — 60 kg">
+                        <div class="quotation-header">
+                            <div>
+                                <div class="quotation-id">ORD-2026-020</div>
+                                <div class="quotation-client">Apex Automotive</div>
+                            </div>
+                            <span class="badge badge-info">Scheduled</span>
+                        </div>
+                        <div class="quotation-body">
+                            <div class="order-specs">
+                                <div class="order-spec"><span>Product</span><strong>Forging — Mild Steel</strong></div>
+                                <div class="order-spec"><span>Quotation</span><strong>Q-2024-046</strong></div>
+                                <div class="order-spec"><span>Starts</span><strong>Jul 12, 2026</strong></div>
+                            </div>
+                            <div class="order-progress">
+                                <div class="order-progress-head">
+                                    <span>Production Progress</span>
+                                    <span class="order-progress-pct">0%</span>
+                                </div>
+                                <div class="progress-track"><div class="progress-fill idle" style="width:0%"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

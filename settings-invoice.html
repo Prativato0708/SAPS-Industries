@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice Settings - SAPS Industries</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;550;600;650;700;750&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script>try{if(localStorage.getItem('theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+</head>
+<body>
+    <div class="app-container" id="appContainer">
+    <script>try{if(localStorage.getItem('sidebarCollapsed')==='1')document.getElementById('appContainer').classList.add('collapsed');}catch(e){}</script>
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">SAPS <span class="logo-sub">Industries</span></div>
+                <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Toggle sidebar">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M3 10h14M3 5h14M3 15h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Enterprise Section</div>
+                    <a href="dashboard.html" class="nav-item"><i class="fas fa-th-large"></i><span>Dashboard</span></a>
+                    <a href="quotations.html" class="nav-item"><i class="fas fa-file-alt"></i><span>Quotations</span></a>
+                    <a href="orders.html" class="nav-item"><i class="fas fa-shopping-cart"></i><span>Orders</span></a>
+                    <a href="#" class="nav-item"><i class="fas fa-truck"></i><span>Shipments</span></a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Internal Section</div>
+                    <a href="materials.html" class="nav-item"><i class="fas fa-cubes"></i><span>Material Management</span></a>
+                    <a href="inventory.html" class="nav-item"><i class="fas fa-boxes"></i><span>Inventory</span></a>
+                    <a href="settings.html" class="nav-item active"><i class="fas fa-cog"></i><span>Settings</span></a>
+                </div>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-menu">
+                    <div class="avatar">SM</div>
+                    <div class="user-info">
+                        <div class="user-name">Mr. Suvendu M</div>
+                        <div class="user-email">Administrator</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content" id="settingsRoot">
+            <header class="page-header">
+                <div>
+                    <h1 class="page-title">Invoice Settings</h1>
+                    <p class="page-subtitle">Control invoice numbering and pick or customise a ready-made invoice template</p>
+                </div>
+                <div class="header-actions">
+                    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle light/dark">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button class="btn btn-secondary" onclick="window.location.href='settings.html'">
+                        <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" fill="currentColor"/></svg>
+                        Back to Settings
+                    </button>
+                </div>
+            </header>
+
+            <div class="card set-card" id="set_invoice">
+                <div class="card-section">
+                    <h4 class="set-subheading">Serial Number</h4>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="set_inv_prefix">Invoice Prefix</label>
+                            <input type="text" id="set_inv_prefix" placeholder="INV-2026-" oninput="updateInvoicePreview()">
+                        </div>
+                        <div class="form-group">
+                            <label for="set_inv_next">Next Invoice Number</label>
+                            <input type="number" id="set_inv_next" min="1" placeholder="1" oninput="updateInvoicePreview()">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="set_inv_pad">Number Padding (digits)</label>
+                            <input type="number" id="set_inv_pad" min="0" max="10" placeholder="4" oninput="updateInvoicePreview()">
+                        </div>
+                        <div class="form-group">
+                            <label for="set_inv_reset">Reset Sequence</label>
+                            <select id="set_inv_reset">
+                                <option value="never">Never</option>
+                                <option value="yearly">Yearly</option>
+                                <option value="monthly">Monthly</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="set-preview">Next invoice number: <strong id="set_inv_preview">—</strong></div>
+
+                    <h4 class="set-subheading">Tax</h4>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="set_inv_gstin">GSTIN</label>
+                            <input type="text" id="set_inv_gstin" placeholder="22AAAAA0000A1Z5">
+                        </div>
+                        <div class="form-group">
+                            <label for="set_inv_gst">Default GST Rate (%)</label>
+                            <input type="number" id="set_inv_gst" min="0" max="100" step="0.5" placeholder="18">
+                        </div>
+                    </div>
+
+                    <h4 class="set-subheading">Template</h4>
+                    <div class="tpl-grid" id="set_inv_templates">
+                        <label class="tpl-option">
+                            <input type="radio" name="invTemplate" value="classic">
+                            <span class="tpl-card">
+                                <span class="tpl-preview tpl-classic"><span></span><span></span><span></span></span>
+                                <span class="tpl-name">Classic</span>
+                                <span class="tpl-desc">Traditional bordered layout</span>
+                            </span>
+                        </label>
+                        <label class="tpl-option">
+                            <input type="radio" name="invTemplate" value="modern">
+                            <span class="tpl-card">
+                                <span class="tpl-preview tpl-modern"><span></span><span></span><span></span></span>
+                                <span class="tpl-name">Modern</span>
+                                <span class="tpl-desc">Coloured header band</span>
+                            </span>
+                        </label>
+                        <label class="tpl-option">
+                            <input type="radio" name="invTemplate" value="minimal">
+                            <span class="tpl-card">
+                                <span class="tpl-preview tpl-minimal"><span></span><span></span><span></span></span>
+                                <span class="tpl-name">Minimal</span>
+                                <span class="tpl-desc">Clean, no borders</span>
+                            </span>
+                        </label>
+                        <label class="tpl-option">
+                            <input type="radio" name="invTemplate" value="detailed">
+                            <span class="tpl-card">
+                                <span class="tpl-preview tpl-detailed"><span></span><span></span><span></span></span>
+                                <span class="tpl-name">Detailed</span>
+                                <span class="tpl-desc">Itemised with tax breakup</span>
+                            </span>
+                        </label>
+                    </div>
+
+                    <h4 class="set-subheading">Customise</h4>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="set_inv_accent">Accent Colour</label>
+                            <input type="color" id="set_inv_accent" value="#6d28d9" class="set-color">
+                        </div>
+                        <div class="form-group set-inline-toggle">
+                            <label>Show company logo</label>
+                            <label class="switch"><input type="checkbox" id="set_inv_logo"><span class="switch-slider"></span></label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="set_inv_footer">Invoice Footer Note</label>
+                        <textarea id="set_inv_footer" rows="2" placeholder="Thank you for your business."></textarea>
+                    </div>
+
+                    <div class="set-card-foot">
+                        <span class="set-msg" id="set_inv_msg"></span>
+                        <button type="button" class="btn btn-primary" onclick="saveInvoiceSettings()">Save Invoice Settings</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

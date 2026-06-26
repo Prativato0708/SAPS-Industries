@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administration - SAPS Industries</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;550;600;650;700;750&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script>try{if(localStorage.getItem('theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+</head>
+<body>
+    <div class="app-container" id="appContainer">
+    <script>try{if(localStorage.getItem('sidebarCollapsed')==='1')document.getElementById('appContainer').classList.add('collapsed');}catch(e){}</script>
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">SAPS <span class="logo-sub">Industries</span></div>
+                <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Toggle sidebar">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M3 10h14M3 5h14M3 15h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Enterprise Section</div>
+                    <a href="dashboard.html" class="nav-item"><i class="fas fa-th-large"></i><span>Dashboard</span></a>
+                    <a href="quotations.html" class="nav-item"><i class="fas fa-file-alt"></i><span>Quotations</span></a>
+                    <a href="orders.html" class="nav-item"><i class="fas fa-shopping-cart"></i><span>Orders</span></a>
+                    <a href="#" class="nav-item"><i class="fas fa-truck"></i><span>Shipments</span></a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Internal Section</div>
+                    <a href="materials.html" class="nav-item"><i class="fas fa-cubes"></i><span>Material Management</span></a>
+                    <a href="inventory.html" class="nav-item"><i class="fas fa-boxes"></i><span>Inventory</span></a>
+                    <a href="settings.html" class="nav-item active"><i class="fas fa-cog"></i><span>Settings</span></a>
+                </div>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-menu">
+                    <div class="avatar">SM</div>
+                    <div class="user-info">
+                        <div class="user-name">Mr. Suvendu M</div>
+                        <div class="user-email">Administrator</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content" id="settingsRoot">
+            <header class="page-header">
+                <div>
+                    <h1 class="page-title">Administration</h1>
+                    <p class="page-subtitle">Company profile, users &amp; roles, and security controls</p>
+                </div>
+                <div class="header-actions">
+                    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle light/dark">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button class="btn btn-secondary" onclick="window.location.href='settings.html'">
+                        <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" fill="currentColor"/></svg>
+                        Back to Settings
+                    </button>
+                </div>
+            </header>
+
+            <!-- Company Profile -->
+            <div class="card set-card" id="set_admin_company">
+                <div class="card-section">
+                    <div class="set-card-head">
+                        <div>
+                            <h3 class="section-title">Company Profile</h3>
+                            <p class="set-card-sub">Details used across quotations, orders and invoices.</p>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="adm_company">Company Name</label>
+                            <input type="text" id="adm_company" placeholder="SAPS Industries">
+                        </div>
+                        <div class="form-group">
+                            <label for="adm_gstin">GSTIN</label>
+                            <input type="text" id="adm_gstin" placeholder="22AAAAA0000A1Z5">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="adm_email">Company Email</label>
+                            <input type="email" id="adm_email" placeholder="info@saps.co">
+                        </div>
+                        <div class="form-group">
+                            <label for="adm_phone">Company Phone</label>
+                            <input type="tel" id="adm_phone" placeholder="+91 22 1234 5678">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="adm_address">Registered Address</label>
+                        <textarea id="adm_address" rows="2" placeholder="Enter company address"></textarea>
+                    </div>
+                    <div class="set-card-foot">
+                        <span class="set-msg" id="adm_company_msg"></span>
+                        <button type="button" class="btn btn-primary" onclick="saveAdminCompany()">Save Company Profile</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users & Roles -->
+            <div class="card set-card" id="set_admin_users">
+                <div class="card-section">
+                    <div class="set-card-head">
+                        <div>
+                            <h3 class="section-title">Users &amp; Roles</h3>
+                            <p class="set-card-sub">Manage who can access the workspace and what role they hold.</p>
+                        </div>
+                        <button type="button" class="btn btn-primary btn-sm" onclick="openUserModal()">
+                            <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" fill="currentColor"/></svg>
+                            Add User
+                        </button>
+                    </div>
+                    <div class="table-container">
+                        <table class="table" id="set_users_table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th style="width:150px;">Role</th>
+                                    <th style="width:110px;">Status</th>
+                                    <th style="width:90px;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security -->
+            <div class="card set-card" id="set_admin_security">
+                <div class="card-section">
+                    <div class="set-card-head">
+                        <div>
+                            <h3 class="section-title">Security &amp; Access</h3>
+                            <p class="set-card-sub">Authentication and session controls for the workspace.</p>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="adm_session">Session Timeout (minutes)</label>
+                            <input type="number" id="adm_session" min="1" placeholder="30">
+                        </div>
+                        <div class="form-group">
+                            <label for="adm_pwlen">Minimum Password Length</label>
+                            <input type="number" id="adm_pwlen" min="4" max="64" placeholder="8">
+                        </div>
+                    </div>
+                    <div class="set-toggles">
+                        <div class="set-row">
+                            <div class="set-row-text">
+                                <div class="set-row-label">Require two-factor authentication</div>
+                                <div class="set-row-desc">All users must verify a second factor when signing in.</div>
+                            </div>
+                            <label class="switch"><input type="checkbox" id="adm_2fa"><span class="switch-slider"></span></label>
+                        </div>
+                        <div class="set-row">
+                            <div class="set-row-text">
+                                <div class="set-row-label">Allow multiple active sessions</div>
+                                <div class="set-row-desc">Permit the same user to be signed in on more than one device.</div>
+                            </div>
+                            <label class="switch"><input type="checkbox" id="adm_multi"><span class="switch-slider"></span></label>
+                        </div>
+                    </div>
+                    <div class="set-card-foot">
+                        <span class="set-msg" id="adm_security_msg"></span>
+                        <button type="button" class="btn btn-primary" onclick="saveAdminSecurity()">Save Security Settings</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- User Modal -->
+    <div class="modal" id="userModal">
+        <div class="modal-overlay" onclick="closeUserModal()"></div>
+        <div class="modal-content modal-sm">
+            <div class="modal-header">
+                <h3 id="usr_title">Add User</h3>
+                <button class="modal-close" onclick="closeUserModal()" aria-label="Close">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" fill="currentColor"/></svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="usr_name">Full Name *</label>
+                    <input type="text" id="usr_name" placeholder="e.g. Priya Sharma">
+                </div>
+                <div class="form-group">
+                    <label for="usr_email">Email *</label>
+                    <input type="email" id="usr_email" placeholder="name@company.com">
+                </div>
+                <div class="form-group">
+                    <label for="usr_role">Role</label>
+                    <select id="usr_role">
+                        <option value="Administrator">Administrator</option>
+                        <option value="Manager">Manager</option>
+                        <option value="Operator">Operator</option>
+                        <option value="Viewer">Viewer</option>
+                    </select>
+                </div>
+                <div class="set-row set-row-modal">
+                    <div class="set-row-text">
+                        <div class="set-row-label">Active</div>
+                        <div class="set-row-desc">Inactive users cannot sign in.</div>
+                    </div>
+                    <label class="switch"><input type="checkbox" id="usr_active" checked><span class="switch-slider"></span></label>
+                </div>
+                <p class="set-msg" id="usr_msg"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeUserModal()">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveUser()">Save User</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

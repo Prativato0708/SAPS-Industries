@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raw Material Management - SAPS Industries</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;550;600;650;700;750&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script>try{if(localStorage.getItem('theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+</head>
+<body>
+    <div class="app-container" id="appContainer">
+    <script>try{if(localStorage.getItem('sidebarCollapsed')==='1')document.getElementById('appContainer').classList.add('collapsed');}catch(e){}</script>
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">SAPS <span class="logo-sub">Industries</span></div>
+                <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Toggle sidebar">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M3 10h14M3 5h14M3 15h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Enterprise Section</div>
+                    <a href="dashboard.html" class="nav-item"><i class="fas fa-th-large"></i><span>Dashboard</span></a>
+                    <a href="quotations.html" class="nav-item"><i class="fas fa-file-alt"></i><span>Quotations</span></a>
+                    <a href="orders.html" class="nav-item"><i class="fas fa-shopping-cart"></i><span>Orders</span></a>
+                    <a href="#" class="nav-item"><i class="fas fa-truck"></i><span>Shipments</span></a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Internal Section</div>
+                    <a href="materials.html" class="nav-item"><i class="fas fa-cubes"></i><span>Material Management</span></a>
+                    <a href="inventory.html" class="nav-item"><i class="fas fa-boxes"></i><span>Inventory</span></a>
+                    <a href="settings.html" class="nav-item active"><i class="fas fa-cog"></i><span>Settings</span></a>
+                </div>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-menu">
+                    <div class="avatar">SM</div>
+                    <div class="user-info">
+                        <div class="user-name">Mr. Suvendu M</div>
+                        <div class="user-email">Administrator</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content" id="settingsRoot">
+            <header class="page-header">
+                <div>
+                    <h1 class="page-title">Raw Material Management</h1>
+                    <p class="page-subtitle">Maintain the raw material catalogue, on-hand stock and reorder levels used across orders</p>
+                </div>
+                <div class="header-actions">
+                    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle light/dark">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button class="btn btn-secondary" onclick="window.location.href='settings.html'">
+                        <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" fill="currentColor"/></svg>
+                        Back to Settings
+                    </button>
+                </div>
+            </header>
+
+            <div class="card set-card" id="set_raw">
+                <div class="card-section">
+                    <div class="set-card-head">
+                        <div>
+                            <h3 class="section-title">Raw Materials</h3>
+                            <p class="set-card-sub">This catalogue drives the "Quantity in Stock" shown on order details.</p>
+                        </div>
+                        <button type="button" class="btn btn-primary btn-sm" onclick="openRawModal()">
+                            <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" fill="currentColor"/></svg>
+                            Add Raw Material
+                        </button>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="set_raw_threshold">Default Low-stock Threshold (%)</label>
+                            <input type="number" id="set_raw_threshold" min="0" max="100" placeholder="20">
+                        </div>
+                        <div class="form-group set-inline-toggle">
+                            <label>Auto-flag low stock</label>
+                            <label class="switch"><input type="checkbox" id="set_raw_autoflag"><span class="switch-slider"></span></label>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="table" id="set_raw_table">
+                            <thead>
+                                <tr>
+                                    <th>Raw Material</th>
+                                    <th style="width:90px;">Unit</th>
+                                    <th style="width:120px;">In Stock</th>
+                                    <th style="width:130px;">Reorder Level</th>
+                                    <th style="width:110px;">Status</th>
+                                    <th style="width:90px;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="set-card-foot">
+                        <span class="set-msg" id="set_raw_msg"></span>
+                        <button type="button" class="btn btn-primary" onclick="saveRawSettings()">Save Raw Material Settings</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Raw Material Modal -->
+    <div class="modal" id="rawModal">
+        <div class="modal-overlay" onclick="closeRawModal()"></div>
+        <div class="modal-content modal-sm">
+            <div class="modal-header">
+                <h3 id="raw_title">Add Raw Material</h3>
+                <button class="modal-close" onclick="closeRawModal()" aria-label="Close">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" fill="currentColor"/></svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="raw_name">Material Name *</label>
+                    <input type="text" id="raw_name" placeholder="e.g. Stainless Steel 304 sheet">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="raw_unit">Unit *</label>
+                        <input type="text" id="raw_unit" placeholder="T / kg / L / pcs">
+                    </div>
+                    <div class="form-group">
+                        <label for="raw_stock">In Stock *</label>
+                        <input type="number" id="raw_stock" min="0" step="0.01" placeholder="0">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="raw_reorder">Reorder Level</label>
+                    <input type="number" id="raw_reorder" min="0" step="0.01" placeholder="0">
+                </div>
+                <p class="set-msg" id="raw_msg"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeRawModal()">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveRawMaterial()">Save Material</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

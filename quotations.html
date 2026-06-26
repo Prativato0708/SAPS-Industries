@@ -17,7 +17,7 @@
         <!-- Sidebar (shared/canonical) -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <div class="logo">SAPS</div>
+                <div class="logo">SAPS <span class="logo-sub">Industries</span></div>
                 <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Toggle sidebar">
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                         <path d="M3 10h14M3 5h14M3 15h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -27,7 +27,7 @@
 
             <nav class="sidebar-nav">
                 <div class="nav-section">
-                    <div class="nav-section-title">Pages</div>
+                    <div class="nav-section-title">Enterprise Section</div>
                     <a href="dashboard.html" class="nav-item">
                         <i class="fas fa-th-large"></i>
                         <span>Dashboard</span>
@@ -40,62 +40,34 @@
                         <i class="fas fa-shopping-cart"></i>
                         <span>Orders</span>
                     </a>
+                    <a href="#" class="nav-item">
+                        <i class="fas fa-truck"></i>
+                        <span>Shipments</span>
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Internal Section</div>
                     <a href="materials.html" class="nav-item">
                         <i class="fas fa-cubes"></i>
-                        <span>Materials</span>
+                        <span>Material Management</span>
                     </a>
                     <a href="inventory.html" class="nav-item">
                         <i class="fas fa-boxes"></i>
                         <span>Inventory</span>
                     </a>
-                    <a href="#" class="nav-item">
-                        <i class="fas fa-truck"></i>
-                        <span>Shipments</span>
-                    </a>
-                    <a href="#" class="nav-item">
-                        <i class="fas fa-chart-line"></i>
-                        <span>Reports</span>
-                    </a>
-                </div>
-
-                <div class="nav-section">
-                    <div class="nav-section-title">UI Elements</div>
-                    <a href="#" class="nav-item">
-                        <i class="fas fa-table"></i>
-                        <span>Tables</span>
-                    </a>
-                    <a href="#" class="nav-item">
-                        <i class="fas fa-chart-bar"></i>
-                        <span>Charts</span>
-                    </a>
-                    <a href="#" class="nav-item">
-                        <i class="fas fa-wpforms"></i>
-                        <span>Forms</span>
-                    </a>
-                    <a href="#" class="nav-item">
+                    <a href="settings.html" class="nav-item">
                         <i class="fas fa-cog"></i>
                         <span>Settings</span>
-                    </a>
-                </div>
-
-                <div class="nav-section">
-                    <div class="nav-section-title">Documentation &amp; Support</div>
-                    <a href="#" class="nav-item">
-                        <i class="fas fa-book"></i>
-                        <span>Documentation</span>
-                    </a>
-                    <a href="#" class="nav-item">
-                        <i class="fas fa-headset"></i>
-                        <span>Support</span>
                     </a>
                 </div>
             </nav>
 
             <div class="sidebar-footer">
                 <div class="user-menu">
-                    <div class="avatar">JD</div>
+                    <div class="avatar">SM</div>
                     <div class="user-info">
-                        <div class="user-name">John Doe</div>
+                        <div class="user-name">Mr. Suvendu M</div>
                         <div class="user-email">Administrator</div>
                     </div>
                 </div>
@@ -179,7 +151,7 @@
                     </div>
                     <div class="quotation-footer">
                         <button class="btn btn-secondary btn-sm">View Details</button>
-                        <button class="btn btn-primary btn-sm">Convert to Order</button>
+                        <button class="btn btn-primary btn-sm" onclick="openConvertModal(this)">Convert to Order</button>
                     </div>
                 </div>
                 
@@ -206,7 +178,7 @@
                     </div>
                     <div class="quotation-footer">
                         <button class="btn btn-secondary btn-sm">View Details</button>
-                        <button class="btn btn-primary btn-sm">Convert to Order</button>
+                        <button class="btn btn-primary btn-sm" onclick="openConvertModal(this)">Convert to Order</button>
                     </div>
                 </div>
                 
@@ -294,7 +266,7 @@
                                         <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" fill="currentColor"/>
                                     </svg>
                                 </button>
-                                <button class="btn-icon" title="Convert">
+                                <button class="btn-icon" title="Convert" onclick="openConvertModal(this)">
                                     <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
                                         <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" fill="currentColor"/>
                                     </svg>
@@ -315,7 +287,7 @@
                                         <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" fill="currentColor"/>
                                     </svg>
                                 </button>
-                                <button class="btn-icon" title="Convert">
+                                <button class="btn-icon" title="Convert" onclick="openConvertModal(this)">
                                     <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
                                         <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" fill="currentColor"/>
                                     </svg>
@@ -360,6 +332,50 @@
         </main>
     </div>
     
+    <!-- Convert to Order Modal -->
+    <div class="modal" id="convertModal">
+        <div class="modal-overlay" onclick="closeConvertModal()"></div>
+        <div class="modal-content modal-sm">
+            <div class="modal-header">
+                <h3>Convert to Order</h3>
+                <button class="modal-close" onclick="closeConvertModal()" aria-label="Close">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" fill="currentColor"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="convert-sub">How much of <strong id="convertQuotationId">this quotation</strong> did the client place an order for?</p>
+                <div class="convert-options">
+                    <label class="convert-option">
+                        <input type="radio" name="convertType" value="full" checked>
+                        <div class="convert-option-card">
+                            <div class="convert-option-icon"><i class="fas fa-box-open"></i></div>
+                            <div>
+                                <div class="convert-option-title">Full Quotation</div>
+                                <div class="convert-option-desc">The client ordered every product and quantity listed in the quotation.</div>
+                            </div>
+                        </div>
+                    </label>
+                    <label class="convert-option">
+                        <input type="radio" name="convertType" value="partial">
+                        <div class="convert-option-card">
+                            <div class="convert-option-icon"><i class="fas fa-layer-group"></i></div>
+                            <div>
+                                <div class="convert-option-title">Partial Quotation</div>
+                                <div class="convert-option-desc">The client ordered only some of the products or reduced quantities.</div>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeConvertModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="confirmConvert()">Continue</button>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
