@@ -1316,6 +1316,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // Settings page: seed defaults and render all sections.
   loadSettingsPage();
 
+  // Inventory pages: render product/raw inventory.
+  loadInventoryPage();
+
   // Wizard form submit
   const qForm = $('quotationForm');
   if (qForm) {
@@ -2042,4 +2045,279 @@ function loadAdminPage() {
   loadAdminCompany();
   renderAdminUsers();
   loadAdminSecurity();
+}
+
+/* ======================================================================
+   11. INVENTORY (Product + Raw Material)
+   ====================================================================== */
+const INV_PRODUCTS_KEY = 'saps_inv_products_v4';
+
+/* Demo dataset — self-contained, NOT linked to the Orders section.
+   • "Machined Component — SS 304" is required by two active orders.
+   • "Casting — SS 316" is required by one active order.
+   • The rest are idle godown stock (one is out of stock) to demonstrate the
+     Idle Products group and search results. `allocations` is the dynamic part. */
+function seedInventory() {
+  return {
+    'Machined Component — SS 304': {
+      unit: 'piece', manufactured: 320, allocations: [],
+      orders: [
+        { order: 'ORD-2026-018', client: 'Acme Manufacturing Co.', reqQty: 200 },
+        { order: 'ORD-2026-031', client: 'Vertex Engineering Pvt Ltd', reqQty: 150 },
+      ],
+    },
+    'Casting — SS 316': {
+      unit: 'piece', manufactured: 90, allocations: [],
+      orders: [
+        { order: 'ORD-2026-026', client: 'Nova Energy Systems', reqQty: 120 },
+      ],
+    },
+    'Aluminum Extrusion — 6061': { unit: 'piece', manufactured: 110, allocations: [], orders: [] },
+    'Welded Assembly — Mild Steel': { unit: 'set', manufactured: 60, allocations: [], orders: [] },
+    'CNC Turned Part — Brass': { unit: 'piece', manufactured: 0, allocations: [], orders: [] },
+  };
+}
+function getInvStore() {
+  let s = settingsRead(INV_PRODUCTS_KEY, null);
+  if (!s || typeof s !== 'object' || Array.isArray(s)) { s = seedInventory(); settingsWrite(INV_PRODUCTS_KEY, s); }
+  return s;
+}
+function saveInvStore(store) { settingsWrite(INV_PRODUCTS_KEY, store); }
+function normalizeEntry(e) {
+  if (!Array.isArray(e.allocations)) e.allocations = [];
+  if (!Array.isArray(e.orders)) e.orders = [];
+  if (typeof e.manufactured !== 'number') e.manufactured = 0;
+  if (!e.unit) e.unit = 'units';
+  return e;
+}
+function allocatedQty(entry) {
+  return (entry.allocations || []).reduce((s, a) => s + (Number(a.qty) || 0), 0);
+}
+function totalRequirement(entry) {
+  return (entry.orders || []).reduce((s, o) => s + (Number(o.reqQty) || 0), 0);
+}
+
+let invProductList = [];
+function buildInvCard(name, idx, entry) {
+  const unit = entry.unit;
+  const mapped = allocatedQty(entry);
+  const idle = Math.max(0, entry.manufactured - mapped);
+  const totalReq = totalRequirement(entry);
+  const hasOrders = entry.orders.length > 0;
+
+  let badge;
+  if (entry.manufactured <= 0 && !hasOrders) badge = '<span class="badge badge-error">Out of Stock</span>';
+  else if (!hasOrders) badge = '<span class="badge badge-info">Idle in Godown</span>';
+  else if (totalReq > 0 && mapped >= totalReq) badge = '<span class="badge badge-success">Requirement Met</span>';
+  else badge = '<span class="badge badge-warning">Pending Allocation</span>';
+
+  const ordersHtml = hasOrders
+    ? entry.orders.map((o) => {
+        const alloc = entry.allocations.find((a) => a.order === o.order);
+        const am = alloc ? alloc.qty : 0;
+        const unmapBtn = am > 0
+          ? `<button type="button" class="inv-unmap" onclick="unmapAllocation(${idx}, '${o.order}')">Unmap</button>`
+          : '';
+        return `
+          <li>
+            <div class="inv-order-line">
+              <span class="inv-order-no">${escapeHtml(o.order)}</span>
+              <span class="inv-order-client">${escapeHtml(o.client)}</span>
+            </div>
+            <div class="inv-order-meta">
+              <span>Needs <strong>${o.reqQty}</strong></span>
+              <span class="inv-order-mapped">Mapped <strong>${am}</strong></span>
+              ${unmapBtn}
+            </div>
+          </li>`;
+      }).join('')
+    : '<li class="inv-noreq">Not required by any active order — full stock is idle in the godown.</li>';
+
+  return `
+    <div class="card inv-card" data-name="${escapeHtml(name)}">
+      <div class="card-section inv-card-main">
+        <div class="inv-card-info">
+          <div class="inv-card-head">
+            <div class="inv-card-title">${escapeHtml(name)}</div>
+            ${badge}
+          </div>
+          <div class="inv-stat-grid">
+            <div class="inv-stat"><span class="inv-stat-label">Total Requirement</span><span class="inv-stat-value">${totalReq} <small>${escapeHtml(unit)}</small></span></div>
+            <div class="inv-stat"><span class="inv-stat-label">Manufactured</span><span class="inv-stat-value">${entry.manufactured}</span></div>
+            <div class="inv-stat"><span class="inv-stat-label">Idle</span><span class="inv-stat-value inv-idle">${idle}</span></div>
+            <div class="inv-stat"><span class="inv-stat-label">Mapped to Orders</span><span class="inv-stat-value inv-mapped">${mapped}</span></div>
+          </div>
+        </div>
+        <div class="inv-card-orders">
+          <div class="inv-orders-head">${hasOrders ? 'Required by ' + entry.orders.length + ' order' + (entry.orders.length === 1 ? '' : 's') : 'Stock status'}</div>
+          <ul class="inv-orders">${ordersHtml}</ul>
+          <div class="inv-card-foot">
+            <button type="button" class="btn btn-primary btn-sm" ${(idle > 0 && hasOrders) ? '' : 'disabled'} onclick="openMapModal(${idx})">Map to Order</button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function invGroupSection(title, key, cards) {
+  if (!cards.length) return '';
+  return `
+    <section class="inv-group" data-group="${key}">
+      <div class="inv-group-head">
+        <h3 class="inv-group-title">${title}</h3>
+        <span class="inv-group-count">${cards.length}</span>
+      </div>
+      <div class="inv-group-cards">${cards.join('')}</div>
+    </section>`;
+}
+
+function renderProductInventory() {
+  const grid = document.querySelector('#inv_products_grid');
+  if (!grid) return;
+  const store = getInvStore();
+  const names = Object.keys(store);
+  invProductList = names;
+  if (!names.length) {
+    grid.innerHTML = '<div class="card"><div class="card-section"><p class="set-card-sub">No products in inventory.</p></div></div>';
+    return;
+  }
+  const required = [];
+  const idle = [];
+  names.forEach((name, idx) => {
+    const entry = normalizeEntry(store[name]);
+    const html = buildInvCard(name, idx, entry);
+    if (entry.orders.length > 0) required.push(html);
+    else idle.push(html);
+  });
+  grid.innerHTML =
+    invGroupSection('Required Products as per Ongoing Orders', 'required', required) +
+    invGroupSection('Idle Products', 'idle', idle);
+  filterProductInventory();
+}
+
+/** Filter product cards by name; hide empty groups; show a note when nothing matches. */
+function filterProductInventory() {
+  const input = $('inv_search');
+  const q = (input ? input.value : '').trim().toLowerCase();
+  let totalVisible = 0;
+  document.querySelectorAll('#inv_products_grid .inv-group').forEach((group) => {
+    let gVisible = 0;
+    group.querySelectorAll('.inv-card').forEach((card) => {
+      const name = (card.dataset.name || '').toLowerCase();
+      const match = !q || name.includes(q);
+      card.style.display = match ? '' : 'none';
+      if (match) { gVisible += 1; totalVisible += 1; }
+    });
+    group.style.display = gVisible ? '' : 'none';
+  });
+  const empty = $('inv_empty');
+  if (empty) {
+    if (q && totalVisible === 0) {
+      empty.style.display = '';
+      empty.textContent = `No product matching “${input.value.trim()}” is in inventory — it’s out of stock or not manufactured yet.`;
+    } else {
+      empty.style.display = 'none';
+    }
+  }
+}
+
+let currentMapIndex = null;
+function flashMapNote(msg) {
+  const n = $('map_note');
+  if (n) { n.textContent = msg; n.classList.add('error'); }
+}
+function openMapModal(idx) {
+  const name = invProductList[idx];
+  if (!name) return;
+  currentMapIndex = idx;
+  const entry = normalizeEntry(getInvStore()[name]);
+  const idle = Math.max(0, entry.manufactured - allocatedQty(entry));
+  setText('map_product', name);
+  setText('map_idle', idle + ' ' + entry.unit);
+  const orders = entry.orders || [];
+  const sel = $('map_order_select');
+  const qtyInput = $('map_qty');
+  const confirmBtn = $('map_confirm');
+  const note = $('map_note');
+  if (note) { note.textContent = ''; note.classList.remove('error'); }
+  if (qtyInput) { qtyInput.value = ''; qtyInput.max = idle; }
+  if (sel) {
+    if (orders.length && idle > 0) {
+      sel.innerHTML = orders.map((o) => {
+        const alloc = entry.allocations.find((a) => a.order === o.order);
+        const am = alloc ? alloc.qty : 0;
+        return `<option value="${escapeHtml(o.order)}">${escapeHtml(o.order)} — needs ${o.reqQty}, mapped ${am}</option>`;
+      }).join('');
+      sel.disabled = false;
+      if (confirmBtn) confirmBtn.disabled = false;
+    } else {
+      sel.innerHTML = `<option value="">${idle <= 0 ? 'No idle stock available' : 'No active orders require this'}</option>`;
+      sel.disabled = true;
+      if (confirmBtn) confirmBtn.disabled = true;
+      if (note) {
+        note.textContent = idle <= 0 ? 'All manufactured stock is already mapped.' : 'No active orders require this product.';
+        note.classList.add('error');
+      }
+    }
+  }
+  openSettingsModal('mapOrderModal', 'map_qty');
+}
+function closeMapModal() { closeSettingsModal('mapOrderModal'); }
+function mapProductToOrder() {
+  const name = invProductList[currentMapIndex];
+  if (!name) return;
+  const sel = $('map_order_select');
+  const qtyInput = $('map_qty');
+  if (!sel || !sel.value) { flashMapNote('Select an order to map to.'); return; }
+  const store = getInvStore();
+  const entry = normalizeEntry(store[name]);
+  const idle = Math.max(0, entry.manufactured - allocatedQty(entry));
+  const qty = parseInt(qtyInput ? qtyInput.value : '', 10);
+  if (!qty || qty <= 0) { flashMapNote('Enter a quantity greater than 0.'); return; }
+  if (qty > idle) { flashMapNote('Quantity exceeds idle stock (' + idle + ').'); return; }
+  const existing = entry.allocations.find((a) => a.order === sel.value);
+  if (existing) existing.qty += qty;
+  else entry.allocations.push({ order: sel.value, qty });
+  saveInvStore(store);
+  renderProductInventory();
+  closeMapModal();
+}
+function unmapAllocation(idx, orderNo) {
+  const name = invProductList[idx];
+  if (!name) return;
+  const store = getInvStore();
+  const entry = normalizeEntry(store[name]);
+  entry.allocations = entry.allocations.filter((a) => a.order !== orderNo);
+  saveInvStore(store);
+  renderProductInventory();
+}
+
+function renderRawInventory() {
+  const body = document.querySelector('#inv_raw_table tbody');
+  if (!body) return;
+  const list = getSettingsRaw();
+  if (!list.length) {
+    body.innerHTML = '<tr><td colspan="5" class="empty-state"><p>No raw materials</p></td></tr>';
+    return;
+  }
+  body.innerHTML = list.map((r) => {
+    const [cls, label] = rawStatusBadge(r);
+    return `
+      <tr>
+        <td><strong>${escapeHtml(r.name)}</strong></td>
+        <td>${escapeHtml(r.unit) || '—'}</td>
+        <td>${escapeHtml(String(r.stock))} ${escapeHtml(r.unit)}</td>
+        <td>${r.reorder ? escapeHtml(String(r.reorder)) + ' ' + escapeHtml(r.unit) : '—'}</td>
+        <td><span class="badge ${cls}">${label}</span></td>
+      </tr>`;
+  }).join('');
+}
+
+function loadInventoryPage() {
+  if (!$('inventoryRoot')) return;
+  renderProductInventory();
+  renderRawInventory();
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeMapModal();
+  });
 }
