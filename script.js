@@ -48,7 +48,12 @@ function initSidebarState() {
   const app = document.querySelector('.app-container');
   if (!app) return;
   let collapsed = false;
-  try { collapsed = localStorage.getItem('sidebarCollapsed') === '1'; } catch (e) {}
+  try {
+    const saved = localStorage.getItem('sidebarCollapsed');
+    if (saved === '1') collapsed = true;
+    else if (saved === '0') collapsed = false;
+    else collapsed = window.matchMedia('(max-width: 820px)').matches; // default: mini rail on mobile
+  } catch (e) { /* storage unavailable — ignore */ }
   app.classList.toggle('collapsed', collapsed);
   ensureSidebarArrow(app);
 }
@@ -1102,6 +1107,19 @@ function loadOrderDetailPage() {
 
   const startBtn = $('odp_startBtn');
   if (startBtn) startBtn.style.display = order.status === 'upcoming' ? '' : 'none';
+
+  const shipBtn = $('odp_shipBtn');
+  if (shipBtn) {
+    if (order.status === 'completed') {
+      shipBtn.style.display = '';
+      const released = !!getShipments()[currentOrderNo];
+      shipBtn.innerHTML = released
+        ? '<i class="fas fa-truck"></i> View in Shipments'
+        : '<i class="fas fa-truck"></i> Release for Shipping';
+    } else {
+      shipBtn.style.display = 'none';
+    }
+  }
 }
 
 function syncOrderProductsFromDOM() { /* products are read-only; nothing to sync */ }
@@ -1318,6 +1336,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Inventory pages: render product/raw inventory.
   loadInventoryPage();
+
+  // Shipments page: render ready/dispatched shipments.
+  loadShipmentsPage();
+
+  // Material Management page: render material cards.
+  loadMaterialsPage();
 
   // Wizard form submit
   const qForm = $('quotationForm');
@@ -2319,5 +2343,351 @@ function loadInventoryPage() {
   renderRawInventory();
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeMapModal();
+  });
+}
+
+/* ======================================================================
+   12. SHIPMENTS
+   ====================================================================== */
+const SHIPMENTS_KEY = 'saps_shipments';
+
+function getShipments() {
+  try { return JSON.parse(localStorage.getItem(SHIPMENTS_KEY)) || {}; } catch (e) { return {}; }
+}
+function saveShipments(all) {
+  try { localStorage.setItem(SHIPMENTS_KEY, JSON.stringify(all)); } catch (e) { /* ignore */ }
+}
+
+/** Called from the order-details page once an order is completed. */
+function releaseForShipping() {
+  const orderNo = currentOrderNo;
+  const order = getOrders()[orderNo];
+  if (!order) return;
+  const all = getShipments();
+  if (!all[orderNo]) {
+    all[orderNo] = {
+      order: order.order,
+      client: order.client || '',
+      product: order.product || '',
+      qty: order.qty || '',
+      complete: order.complete || '',
+      status: 'ready',
+      vehicle: '',
+      releasedAt: Date.now(),
+      dispatchedAt: 0,
+    };
+    saveShipments(all);
+  }
+  window.location.href = 'shipments.html';
+}
+
+function shipCard(s) {
+  const dispatched = s.status === 'dispatched';
+  const badge = dispatched
+    ? '<span class="badge badge-success">Dispatched</span>'
+    : '<span class="badge badge-warning">Ready</span>';
+  const vehicleRow = `<div class="order-spec"><span>Vehicle</span><strong>${s.vehicle ? escapeHtml(s.vehicle) : '—'}</strong></div>`;
+  const footer = dispatched
+    ? `<div class="quotation-footer"><span class="ship-dispatched-note"><i class="fas fa-circle-check"></i> Dispatched${s.dispatchedAt ? ' · ' + escapeHtml(fmtListDate(new Date(s.dispatchedAt).toISOString().split('T')[0])) : ''}</span></div>`
+    : `<div class="quotation-footer">
+         <button type="button" class="btn btn-secondary" onclick="openAssignVehicle('${s.order}')">${s.vehicle ? 'Change Vehicle' : 'Assign Vehicle'}</button>
+         <button type="button" class="btn btn-primary" onclick="markDispatched('${s.order}')">Mark Dispatched</button>
+       </div>`;
+  return `
+    <div class="card order-card">
+      <div class="quotation-header">
+        <div>
+          <div class="quotation-id">${escapeHtml(s.order)}</div>
+          <div class="quotation-client">${escapeHtml(s.client)}</div>
+        </div>
+        ${badge}
+      </div>
+      <div class="quotation-body">
+        <div class="order-specs">
+          <div class="order-spec"><span>Product</span><strong>${escapeHtml(s.product) || '—'}</strong></div>
+          <div class="order-spec"><span>Quantity</span><strong>${escapeHtml(String(s.qty)) || '—'}</strong></div>
+          <div class="order-spec"><span>Completed</span><strong>${escapeHtml(s.complete) || '—'}</strong></div>
+          ${vehicleRow}
+        </div>
+      </div>
+      ${footer}
+    </div>`;
+}
+
+function renderShipments() {
+  const readyGrid = $('ship_ready_grid');
+  const dispatchedGrid = $('ship_dispatched_grid');
+  if (!readyGrid || !dispatchedGrid) return;
+  const list = Object.values(getShipments());
+  const ready = list.filter((s) => s.status !== 'dispatched');
+  const dispatched = list.filter((s) => s.status === 'dispatched');
+
+  readyGrid.innerHTML = ready.length
+    ? ready.map(shipCard).join('')
+    : '<div class="card"><div class="card-section"><p class="set-card-sub">No orders are waiting for dispatch. Release a completed order from its order details page.</p></div></div>';
+  dispatchedGrid.innerHTML = dispatched.length
+    ? dispatched.map(shipCard).join('')
+    : '<div class="card"><div class="card-section"><p class="set-card-sub">Nothing dispatched yet.</p></div></div>';
+
+  setText('shipReadyCount', ready.length);
+  setText('shipDispatchedCount', dispatched.length);
+}
+
+let currentAssignOrder = null;
+function openAssignVehicle(orderNo) {
+  currentAssignOrder = orderNo;
+  const s = getShipments()[orderNo];
+  setText('assign_order', orderNo);
+  const sel = $('assign_vehicle_select');
+  const confirmBtn = $('assign_confirm');
+  const note = $('assign_note');
+  if (note) { note.textContent = ''; note.classList.remove('error'); }
+  const vehicles = getSettingsVehicles().filter((v) => v.status !== 'maintenance');
+  if (sel) {
+    if (vehicles.length) {
+      sel.innerHTML = vehicles.map((v) =>
+        `<option value="${escapeHtml(v.name + ' (' + v.reg + ')')}" ${s && s.vehicle === (v.name + ' (' + v.reg + ')') ? 'selected' : ''}>${escapeHtml(v.name)} — ${escapeHtml(v.reg)} · ${escapeHtml(v.type)}</option>`).join('');
+      sel.disabled = false;
+      if (confirmBtn) confirmBtn.disabled = false;
+    } else {
+      sel.innerHTML = '<option value="">No vehicles available</option>';
+      sel.disabled = true;
+      if (confirmBtn) confirmBtn.disabled = true;
+      if (note) { note.textContent = 'Add vehicles in Settings → Shipment first.'; note.classList.add('error'); }
+    }
+  }
+  openSettingsModal('assignVehicleModal');
+}
+function closeAssignModal() { closeSettingsModal('assignVehicleModal'); }
+function assignVehicle() {
+  const sel = $('assign_vehicle_select');
+  if (!sel || !sel.value) return;
+  const all = getShipments();
+  const s = all[currentAssignOrder];
+  if (s) { s.vehicle = sel.value; saveShipments(all); }
+  renderShipments();
+  closeAssignModal();
+}
+function markDispatched(orderNo) {
+  const all = getShipments();
+  const s = all[orderNo];
+  if (!s) return;
+  if (!s.vehicle) { openAssignVehicle(orderNo); return; }
+  s.status = 'dispatched';
+  s.dispatchedAt = Date.now();
+  saveShipments(all);
+  renderShipments();
+}
+
+function loadShipmentsPage() {
+  if (!$('shipmentsRoot')) return;
+  renderShipments();
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeAssignModal();
+  });
+}
+
+/* ======================================================================
+   13. MATERIAL MANAGEMENT
+   ====================================================================== */
+const MM_KEY = 'saps_mm';   /* per-material: { products:[{product,qty}], vendors:[{name,contact,price,lead,notes}] } */
+
+function getMM() { return settingsRead(MM_KEY, {}) || {}; }
+function saveMM(m) { settingsWrite(MM_KEY, m); }
+
+/** Products whose bill-of-materials lists this material (used as a default). */
+function productsUsingMaterial(name) {
+  const key = String(name).toLowerCase();
+  return getSettingsProducts()
+    .filter((p) => (p.raw || []).some((r) => String(r.name).toLowerCase() === key))
+    .map((p) => {
+      const r = p.raw.find((x) => String(x.name).toLowerCase() === key);
+      return { product: p.name, qty: r ? r.qty : '' };
+    });
+}
+/** Material extra data; falls back to BOM-derived products + no vendors. */
+function getMaterialExtra(name) {
+  const mm = getMM();
+  const e = mm[name];
+  return {
+    products: e && Array.isArray(e.products) ? e.products.map((x) => ({ product: x.product, qty: x.qty }))
+                                             : productsUsingMaterial(name),
+    vendors: e && Array.isArray(e.vendors) ? e.vendors.map((v) => ({ ...v })) : [],
+  };
+}
+
+let mmList = [];
+function renderMaterials() {
+  const grid = $('mm_grid');
+  if (!grid) return;
+  mmList = getSettingsRaw();
+  if (!mmList.length) {
+    grid.innerHTML = '<div class="card"><div class="card-section"><p class="set-card-sub">No raw materials yet. Add them in Settings → Raw Material Management.</p></div></div>';
+    return;
+  }
+  grid.innerHTML = mmList.map((r, idx) => {
+    const [cls, label] = rawStatusBadge(r);
+    const extra = getMaterialExtra(r.name);
+    return `
+      <div class="card mm-row" data-name="${escapeHtml(r.name)}" onclick="openMaterialModal(${idx})">
+        <div class="mm-row-main">
+          <div class="mm-row-id">
+            <div class="mm-row-title">${escapeHtml(r.name)}</div>
+            <span class="badge ${cls}">${label}</span>
+          </div>
+          <div class="mm-row-stats">
+            <div class="mm-stat"><span>In Stock</span><strong>${escapeHtml(String(r.stock))} ${escapeHtml(r.unit)}</strong></div>
+            <div class="mm-stat"><span>Reorder</span><strong>${r.reorder ? escapeHtml(String(r.reorder)) + ' ' + escapeHtml(r.unit) : '—'}</strong></div>
+            <div class="mm-stat"><span>Products</span><strong>${extra.products.length}</strong></div>
+            <div class="mm-stat"><span>Vendors</span><strong>${extra.vendors.length}</strong></div>
+          </div>
+          <i class="fas fa-chevron-right mm-row-arrow"></i>
+        </div>
+      </div>`;
+  }).join('');
+  filterMaterials();
+}
+
+function filterMaterials() {
+  const input = $('mm_search');
+  const q = (input ? input.value : '').trim().toLowerCase();
+  let visible = 0;
+  document.querySelectorAll('#mm_grid .mm-row').forEach((card) => {
+    const match = !q || (card.dataset.name || '').toLowerCase().includes(q);
+    card.style.display = match ? '' : 'none';
+    if (match) visible += 1;
+  });
+  const empty = $('mm_empty');
+  if (empty) {
+    if (q && visible === 0) { empty.style.display = ''; empty.textContent = `No material matching “${input.value.trim()}”.`; }
+    else empty.style.display = 'none';
+  }
+}
+
+/* ---- detail modal ---- */
+let currentMaterialIdx = null;
+let mmProducts = [];
+let mmVendors = [];
+
+function productOptions(selected) {
+  const opts = ['<option value="">Select product</option>'].concat(
+    getSettingsProducts().map((p) =>
+      `<option value="${escapeHtml(p.name)}" ${p.name === selected ? 'selected' : ''}>${escapeHtml(p.name)}</option>`)
+  );
+  return opts.join('');
+}
+function renderMmProducts() {
+  const body = $('mm_products_body');
+  if (!body) return;
+  body.innerHTML = mmProducts.map((row, i) => `
+    <tr data-idx="${i}">
+      <td><select class="mm-prod-name">${productOptions(row.product)}</select></td>
+      <td><input type="text" class="mm-prod-qty" value="${escapeHtml(String(row.qty || ''))}" placeholder="e.g. 2.4 kg"></td>
+      <td><button type="button" class="btn-icon" title="Remove" onclick="removeMmProduct(${i})">${TRASH_SVG}</button></td>
+    </tr>`).join('');
+}
+function syncMmProductsFromDOM() {
+  document.querySelectorAll('#mm_products_body tr[data-idx]').forEach((tr) => {
+    const i = +tr.dataset.idx;
+    if (!mmProducts[i]) return;
+    mmProducts[i].product = tr.querySelector('.mm-prod-name').value;
+    mmProducts[i].qty = tr.querySelector('.mm-prod-qty').value;
+  });
+}
+function addMmProduct() { syncMmProductsFromDOM(); mmProducts.push({ product: '', qty: '' }); renderMmProducts(); }
+function removeMmProduct(i) { syncMmProductsFromDOM(); mmProducts.splice(i, 1); renderMmProducts(); }
+
+function renderMmVendors() {
+  const body = $('mm_vendors_body');
+  if (!body) return;
+  if (!mmVendors.length) {
+    body.innerHTML = '<p class="mm-hint">No vendors added yet.</p>';
+    return;
+  }
+  body.innerHTML = mmVendors.map((v, i) => `
+    <div class="mm-vendor" data-idx="${i}">
+      <div class="mm-vendor-head">
+        <span class="mm-vendor-no">Vendor ${i + 1}</span>
+        <button type="button" class="inv-unmap" onclick="removeMmVendor(${i})">Remove</button>
+      </div>
+      <div class="mm-vendor-grid">
+        <div class="form-group"><label>Vendor Name</label><input type="text" class="mm-v-name" value="${escapeHtml(v.name || '')}" placeholder="Supplier name"></div>
+        <div class="form-group"><label>Contact Number</label><input type="tel" class="mm-v-contact" value="${escapeHtml(v.contact || '')}" placeholder="+91 98765 43210"></div>
+        <div class="form-group"><label>Price / Unit (₹)</label><input type="number" class="mm-v-price" min="0" step="0.01" value="${escapeHtml(String(v.price || ''))}" placeholder="0.00"></div>
+        <div class="form-group"><label>Lead Time (days)</label><input type="number" class="mm-v-lead" min="0" value="${escapeHtml(String(v.lead || ''))}" placeholder="0"></div>
+        <div class="form-group mm-v-notes-wrap"><label>Purchase Notes</label><input type="text" class="mm-v-notes" value="${escapeHtml(v.notes || '')}" placeholder="MOQ, payment terms, GST, etc."></div>
+      </div>
+    </div>`).join('');
+}
+function syncMmVendorsFromDOM() {
+  document.querySelectorAll('#mm_vendors_body .mm-vendor[data-idx]').forEach((el) => {
+    const i = +el.dataset.idx;
+    if (!mmVendors[i]) return;
+    mmVendors[i].name = el.querySelector('.mm-v-name').value;
+    mmVendors[i].contact = el.querySelector('.mm-v-contact').value;
+    mmVendors[i].price = el.querySelector('.mm-v-price').value;
+    mmVendors[i].lead = el.querySelector('.mm-v-lead').value;
+    mmVendors[i].notes = el.querySelector('.mm-v-notes').value;
+  });
+}
+function addMmVendor() { syncMmVendorsFromDOM(); mmVendors.push({ name: '', contact: '', price: '', lead: '', notes: '' }); renderMmVendors(); }
+function removeMmVendor(i) { syncMmVendorsFromDOM(); mmVendors.splice(i, 1); renderMmVendors(); }
+
+function openMaterialModal(idx) {
+  const mat = mmList[idx];
+  if (!mat) return;
+  currentMaterialIdx = idx;
+  setText('mm_title', mat.name);
+  if ($('mm_unit')) $('mm_unit').value = mat.unit || '';
+  if ($('mm_stock')) $('mm_stock').value = mat.stock;
+  if ($('mm_reorder')) $('mm_reorder').value = mat.reorder;
+  const extra = getMaterialExtra(mat.name);
+  mmProducts = extra.products;
+  mmVendors = extra.vendors;
+  renderMmProducts();
+  renderMmVendors();
+  const msg = $('mm_msg'); if (msg) { msg.textContent = ''; msg.classList.remove('error'); }
+  openSettingsModal('materialModal');
+}
+function closeMaterialModal() { closeSettingsModal('materialModal'); }
+
+function saveMaterial() {
+  const mat = mmList[currentMaterialIdx];
+  if (!mat) return;
+  syncMmProductsFromDOM();
+  syncMmVendorsFromDOM();
+
+  // Basic details -> raw catalogue (saps_set_raw)
+  const rawList = getSettingsRaw();
+  const entry = rawList.find((r) => r.id === mat.id) || rawList.find((r) => r.name === mat.name);
+  if (entry) {
+    entry.unit = $('mm_unit').value.trim() || entry.unit;
+    entry.stock = parseFloat($('mm_stock').value) || 0;
+    entry.reorder = parseFloat($('mm_reorder').value) || 0;
+    settingsWrite(SET_RAW_KEY, rawList);
+  }
+
+  // Products + vendors -> material-management store
+  const mm = getMM();
+  mm[mat.name] = {
+    products: mmProducts.map((p) => ({ product: String(p.product).trim(), qty: String(p.qty).trim() })).filter((p) => p.product),
+    vendors: mmVendors.map((v) => ({
+      name: String(v.name).trim(),
+      contact: String(v.contact).trim(),
+      price: v.price === '' ? '' : (parseFloat(v.price) || 0),
+      lead: v.lead === '' ? '' : (parseInt(v.lead, 10) || 0),
+      notes: String(v.notes).trim(),
+    })).filter((v) => v.name),
+  };
+  saveMM(mm);
+  renderMaterials();
+  closeMaterialModal();
+}
+
+function loadMaterialsPage() {
+  if (!$('materialsRoot')) return;
+  renderMaterials();
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeMaterialModal();
   });
 }

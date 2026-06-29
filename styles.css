@@ -109,62 +109,68 @@
    1b. DARK MODE — overrides every colour token
 ------------------------------------------------------------------ */
 [data-theme="dark"] {
-  --primary:      #3B82F6;
-  --primary-dark: #2563EB;
+  /* Premium olive backgrounds + neon-lime accent (industrial control room) */
+  --primary:      #8CEB10;
+  --primary-dark: #A7F22A;   /* used by hover/accent-hover — brightens, never darkens */
 
-  --bg:    #0F172A;
-  --card:  #1E293B;
+  --bg:    #111A05;
+  --card:  #1E2A0F;
 
-  --text:  #E2E8F0;
-  --muted: #94A3B8;
+  --text:  #F6F8F3;
+  --muted: #B6C39F;
 
-  --border: #334155;
+  --border: #31441A;
 
-  --surface:    var(--card);
-  --surface-2:  #243449;
-  --bg-subtle:  #243449;
-  --sidebar-bg: var(--card);      /* rule 6: dark sidebar = card */
+  /* Dark olive text/icons that sit on top of the bright lime accent */
+  --on-primary: #10180A;
 
-  --text-soft:  #CBD5E1;
+  --surface:    #161F09;
+  --surface-2:  #243311;
+  --bg-subtle:  #1A2509;
+  --sidebar-bg: var(--surface);
+  --input:      #18210A;
+
+  --text-soft:  #DCE4D0;
   --text-muted: var(--muted);
-  --text-faint: #64748B;
+  --text-faint: #7E8C68;
 
-  --border-strong: #475569;
-  --ring: rgba(59, 130, 246, 0.45);
+  --border-strong: #3F5523;
+  --ring: rgba(140, 235, 16, 0.40);
 
-  /* Primary tints become subtle translucent fills / lighter text on dark */
-  --brand-50:  rgba(59, 130, 246, 0.14);
-  --brand-200: #1E3A8A;
-  --brand-400: #3B82F6;
-  --brand-500: #60A5FA;
-  --brand-600: #60A5FA;
-  --brand-700: #93C5FD;
-  --brand-800: #BFDBFE;
+  /* Lime accent tints (legacy --brand-* references) — kept subtle, used sparingly */
+  --brand-50:  rgba(140, 235, 16, 0.12);
+  --brand-200: #2C3D16;
+  --brand-400: #76CC0B;
+  --brand-500: #8CEB10;
+  --brand-600: #A7F22A;
+  --brand-700: #C2F75C;
+  --brand-800: #D9FB93;
   --accent-pink: #F472B6;
 
+  --gradient-brand: linear-gradient(135deg, #8CEB10 0%, #A7F22A 100%);
   --gradient-surface: linear-gradient(180deg, var(--card) 0%, var(--surface-2) 100%);
   --gradient-mesh:
-      radial-gradient(at 0% 0%, rgba(59,130,246,0.20) 0px, transparent 55%),
-      radial-gradient(at 100% 0%, rgba(37,99,235,0.16) 0px, transparent 50%),
-      radial-gradient(at 80% 100%, rgba(96,165,250,0.12) 0px, transparent 50%);
+      radial-gradient(at 0% 0%, rgba(140,235,16,0.14) 0px, transparent 55%),
+      radial-gradient(at 100% 0%, rgba(118,204,11,0.10) 0px, transparent 50%),
+      radial-gradient(at 80% 100%, rgba(167,242,42,0.08) 0px, transparent 50%);
 
-  --glass: rgba(30, 41, 59, 0.78);
-  --glass-border: rgba(148, 163, 184, 0.18);
+  --glass: rgba(22, 31, 9, 0.80);
+  --glass-border: rgba(182, 195, 159, 0.18);
 
-  /* Status tints become translucent; status text becomes brighter */
-  --success-50: rgba(34,197,94,0.16);  --success-500:#22C55E; --success-700:#4ADE80;
-  --warning-50: rgba(245,158,11,0.16); --warning-500:#F59E0B; --warning-700:#FBBF24;
-  --error-50:   rgba(239,68,68,0.16);  --error-500:  #EF4444; --error-700:  #F87171;
-  --info-50:    rgba(59,130,246,0.16); --info-500:   #3B82F6; --info-700:   #60A5FA;
+  /* Status — palette green/amber/red; info stays a calm blue for clarity */
+  --success-50: rgba(105,216,79,0.16);  --success-500:#69D84F; --success-700:#8BE673;
+  --warning-50: rgba(250,204,21,0.16);  --warning-500:#FACC15; --warning-700:#FCD94B;
+  --error-50:   rgba(239,68,68,0.16);   --error-500:  #EF4444; --error-700:  #F87171;
+  --info-50:    rgba(96,165,250,0.16);  --info-500:   #60A5FA; --info-700:   #93C5FD;
 
-  /* Shadows (dark — deeper, neutral black) */
-  --shadow-xs: 0 1px 2px rgba(0,0,0,0.30);
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.40), 0 1px 2px rgba(0,0,0,0.30);
-  --shadow-md: 0 2px 8px rgba(0,0,0,0.45);
-  --shadow-lg: 0 4px 16px rgba(0,0,0,0.50);
-  --shadow-xl: 0 8px 32px rgba(0,0,0,0.55);
-  --shadow-card: 0 2px 10px rgba(0,0,0,0.45);
-  --shadow-brand: 0 4px 16px rgba(59,130,246,0.40);
+  /* Shadows — deep neutral black for depth against olive surfaces */
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.40);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.50), 0 1px 2px rgba(0,0,0,0.38);
+  --shadow-md: 0 2px 8px rgba(0,0,0,0.50);
+  --shadow-lg: 0 6px 20px rgba(0,0,0,0.55);
+  --shadow-xl: 0 10px 34px rgba(0,0,0,0.60);
+  --shadow-card: 0 2px 12px rgba(0,0,0,0.45);
+  --shadow-brand: 0 4px 16px rgba(140,235,16,0.22);
 }
 
 /* Smooth theme transitions */
@@ -1335,7 +1341,7 @@ select {
   flex-shrink: 0; font-size: 16px;
 }
 .convert-option input:checked + .convert-option-card .convert-option-icon {
-  background: var(--brand-500); color: #fff;
+  background: var(--brand-500); color: var(--on-primary);
 }
 .convert-option-title { font-size: 14px; font-weight: 650; color: var(--text); margin-bottom: 2px; }
 .convert-option-desc { font-size: 12.5px; color: var(--text-muted); line-height: 1.45; }
@@ -1464,12 +1470,12 @@ select {
 }
 
 @media (max-width: 820px) {
+  /* Sidebar acts as an overlay drawer: content keeps the mini-rail offset,
+     and the .collapsed toggle (global rules) decides mini vs expanded. */
   .main-content { margin-left: var(--sidebar-w-collapsed); padding: var(--s-6) var(--s-5); }
-  .sidebar { width: var(--sidebar-w-collapsed); }
-  .sidebar .logo { display: none; }
-  .sidebar-header { justify-content: center; }
-  .nav-item span, .user-info, .nav-section-title, .nav-chevron { display: none; }
-  .nav-item { justify-content: center; padding: 11px; gap: 0; }
+  .sidebar { box-shadow: var(--shadow-xl); }
+  .app-container:not(.collapsed) .sidebar { z-index: 70; }
+
   .form-row, .review-grid { grid-template-columns: 1fr; }
   .stepper { overflow-x: auto; }
   .step-content { display: none; }
@@ -1831,7 +1837,7 @@ select {
 .sidebar-collapse-btn:hover {
   background: var(--brand-500);
   border-color: var(--brand-500);
-  color: #fff;
+  color: var(--on-primary);
   transform: translateY(-50%) scale(1.12);
   box-shadow: 0 0 0 4px var(--ring), 0 6px 16px rgba(20, 23, 38, 0.2);
 }
@@ -1843,7 +1849,8 @@ select {
 .app-container.collapsed .sidebar-collapse-btn svg { transform: rotate(180deg); }
 
 @media (max-width: 820px) {
-  .sidebar-collapse-btn { left: calc(var(--sidebar-w-collapsed) - 15px); }
+  .sidebar-collapse-btn { left: calc(var(--sidebar-w) - 15px); }
+  .app-container.collapsed .sidebar-collapse-btn { left: calc(var(--sidebar-w-collapsed) - 15px); }
 }
 
 /* ------------------------------------------------------------------
@@ -1933,4 +1940,110 @@ select {
 @media (max-width: 860px) {
   .inv-card-main { flex-direction: column; gap: var(--s-5); }
   .inv-card-orders { width: auto; border-left: none; padding-left: 0; border-top: 1px solid var(--border); padding-top: var(--s-4); }
+}
+
+/* ------------------------------------------------------------------
+   28. DARK THEME — COMPONENT POLISH (olive + lime)
+   Only affects [data-theme="dark"]; light mode is untouched.
+------------------------------------------------------------------ */
+/* Inputs sit on a darker olive with a lime focus border */
+[data-theme="dark"] input,
+[data-theme="dark"] textarea,
+[data-theme="dark"] select,
+[data-theme="dark"] .dash-search,
+[data-theme="dark"] .dash-search input {
+  background: var(--input);
+}
+[data-theme="dark"] input:focus,
+[data-theme="dark"] textarea:focus,
+[data-theme="dark"] select:focus {
+  background: var(--input);
+  border-color: var(--primary);
+}
+
+/* Tables: subtle alternating rows + elegant lime hover */
+[data-theme="dark"] .table tbody tr:nth-child(even) { background: rgba(255, 255, 255, 0.025); }
+[data-theme="dark"] .table tbody tr:hover { background: var(--brand-50); }
+
+/* Primary button: brighten slightly + soft lime shadow (no neon block, no purple glow) */
+[data-theme="dark"] .btn-primary:hover {
+  box-shadow: 0 6px 18px rgba(140, 235, 16, 0.22);
+  filter: brightness(1.06);
+}
+
+/* Clickable cards: gentle lift with a soft lime border glow on hover */
+[data-theme="dark"] .settings-hub-card:hover,
+[data-theme="dark"] .quotation-card:hover,
+[data-theme="dark"] .order-card:hover {
+  border-color: var(--brand-400);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(140, 235, 16, 0.12);
+}
+
+/* ------------------------------------------------------------------
+   29. SHIPMENTS
+------------------------------------------------------------------ */
+.ship-dispatched-note {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: 13px; font-weight: 600; color: var(--success-700);
+}
+.ship-dispatched-note i { font-size: 14px; }
+
+
+/* ------------------------------------------------------------------
+   30. MATERIAL MANAGEMENT
+------------------------------------------------------------------ */
+.mm-toolbar { margin-bottom: var(--s-5); }
+
+.mm-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+.mm-grid .card + .card { margin-top: 0; }
+
+.mm-row {
+  cursor: pointer;
+  transition: transform var(--t-fast) var(--ease-out),
+              box-shadow var(--t-base) var(--ease-out),
+              border-color var(--t-base) var(--ease-out);
+}
+.mm-row:hover { border-color: var(--brand-400); box-shadow: var(--shadow-md); transform: translateX(2px); }
+.mm-row-main {
+  display: flex; align-items: center; gap: var(--s-5);
+  padding: var(--s-4) var(--s-5);
+}
+.mm-row-id { display: flex; align-items: center; gap: var(--s-3); flex: 1; min-width: 0; }
+.mm-row-title { font-size: 15px; font-weight: 700; letter-spacing: -0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.mm-row-stats { display: flex; align-items: center; gap: var(--s-6); flex-shrink: 0; }
+.mm-stat { display: flex; flex-direction: column; gap: 1px; min-width: 64px; }
+.mm-stat span { font-size: 10.5px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; }
+.mm-stat strong { font-size: 14px; font-weight: 700; letter-spacing: -0.01em; }
+
+.mm-row-arrow { color: var(--text-faint); font-size: 13px; flex-shrink: 0; transition: color var(--t-fast), transform var(--t-fast); }
+.mm-row:hover .mm-row-arrow { color: var(--brand-600); transform: translateX(2px); }
+
+.mm-hint { font-size: 12.5px; color: var(--text-muted); line-height: 1.5; margin: -2px 0 var(--s-3); }
+
+@media (max-width: 720px) {
+  .mm-row-main { flex-wrap: wrap; gap: var(--s-3); }
+  .mm-row-stats { gap: var(--s-4); width: 100%; }
+  .mm-row-arrow { display: none; }
+}
+
+/* Vendor blocks in the material modal */
+.mm-vendors { display: flex; flex-direction: column; gap: var(--s-3); }
+.mm-vendor {
+  padding: var(--s-4); background: var(--surface-2);
+  border: 1px solid var(--border); border-radius: var(--r-md);
+}
+.mm-vendor-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--s-3); }
+.mm-vendor-no { font-size: 12px; font-weight: 700; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.04em; }
+.mm-vendor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-3); }
+.mm-vendor-grid .form-group label { font-size: 11.5px; }
+.mm-vendor-grid input { height: 38px; }
+.mm-v-notes-wrap { grid-column: 1 / -1; }
+
+@media (max-width: 560px) {
+  .mm-vendor-grid { grid-template-columns: 1fr; }
 }

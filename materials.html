@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product Inventory - SAPS Industries</title>
+    <title>Material Management - SAPS Industries</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;550;600;650;700;750&display=swap" rel="stylesheet">
@@ -33,8 +33,8 @@
                 </div>
                 <div class="nav-section">
                     <div class="nav-section-title">Internal Section</div>
-                    <a href="materials.html" class="nav-item"><i class="fas fa-cubes"></i><span>Material Management</span></a>
-                    <a href="inventory.html" class="nav-item active"><i class="fas fa-boxes"></i><span>Inventory</span></a>
+                    <a href="materials.html" class="nav-item active"><i class="fas fa-cubes"></i><span>Material Management</span></a>
+                    <a href="inventory.html" class="nav-item"><i class="fas fa-boxes"></i><span>Inventory</span></a>
                     <a href="settings.html" class="nav-item"><i class="fas fa-cog"></i><span>Settings</span></a>
                 </div>
             </nav>
@@ -49,66 +49,87 @@
             </div>
         </aside>
 
-        <main class="main-content" id="inventoryRoot">
+        <main class="main-content" id="materialsRoot">
             <header class="page-header">
                 <div>
-                    <h1 class="page-title">Product Inventory</h1>
-                    <p class="page-subtitle">Manufactured products in stock. Idle by default — map a product to an ongoing order that needs it.</p>
+                    <h1 class="page-title">Material Management</h1>
+                    <p class="page-subtitle">Raw materials, where they're used, and their vendors</p>
                 </div>
                 <div class="header-actions">
                     <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle light/dark">
                         <i class="fas fa-moon"></i>
                     </button>
-                    <button class="btn btn-secondary" onclick="window.location.href='inventory.html'">
-                        <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" fill="currentColor"/></svg>
-                        Back to Inventory
-                    </button>
                 </div>
             </header>
 
-            <div class="set-card-head" style="margin-bottom: var(--s-5);">
-                <div>
-                    <h3 class="section-title" style="margin-bottom:4px;">Products &amp; Stock</h3>
-                    <p class="set-card-sub">Products required by active orders are grouped first; everything else sits under <strong>Idle Products</strong>. Map part of a product's stock to an order and leave the rest idle.</p>
-                </div>
-            </div>
-            <div class="inv-toolbar">
+            <div class="mm-toolbar">
                 <div class="inv-search">
                     <i class="fas fa-search"></i>
-                    <input type="text" id="inv_search" placeholder="Search product by name…" oninput="filterProductInventory()">
+                    <input type="text" id="mm_search" placeholder="Search material by name…" oninput="filterMaterials()">
                 </div>
             </div>
-            <div class="inv-grid" id="inv_products_grid"></div>
-            <p class="inv-empty" id="inv_empty" style="display:none;"></p>
+
+            <div class="mm-grid" id="mm_grid"></div>
+            <p class="inv-empty" id="mm_empty" style="display:none;"></p>
         </main>
     </div>
 
-    <!-- Map to Order Modal -->
-    <div class="modal" id="mapOrderModal">
-        <div class="modal-overlay" onclick="closeMapModal()"></div>
-        <div class="modal-content modal-sm">
+    <!-- Material Detail Modal -->
+    <div class="modal" id="materialModal">
+        <div class="modal-overlay" onclick="closeMaterialModal()"></div>
+        <div class="modal-content">
             <div class="modal-header">
-                <h3>Map Product to Order</h3>
-                <button class="modal-close" onclick="closeMapModal()" aria-label="Close">
+                <h3 id="mm_title">Material</h3>
+                <button class="modal-close" onclick="closeMaterialModal()" aria-label="Close">
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" fill="currentColor"/></svg>
                 </button>
             </div>
             <div class="modal-body">
-                <div class="pv-row"><span>Product</span><strong id="map_product">—</strong></div>
-                <div class="pv-row" style="margin-bottom:var(--s-4);"><span>Idle available</span><strong id="map_idle">—</strong></div>
-                <div class="form-group">
-                    <label for="map_order_select">Ongoing order requiring this product</label>
-                    <select id="map_order_select"></select>
+                <div class="set-modal-subhead"><span>Basic Details</span></div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="mm_unit">Unit</label>
+                        <input type="text" id="mm_unit" placeholder="T / kg / L / pcs">
+                    </div>
+                    <div class="form-group">
+                        <label for="mm_stock">In Stock</label>
+                        <input type="number" id="mm_stock" min="0" step="0.01" placeholder="0">
+                    </div>
                 </div>
                 <div class="form-group">
-                    <label for="map_qty">Quantity to map</label>
-                    <input type="number" id="map_qty" min="1" placeholder="e.g. 100">
+                    <label for="mm_reorder">Reorder Level</label>
+                    <input type="number" id="mm_reorder" min="0" step="0.01" placeholder="0">
                 </div>
-                <p class="set-msg" id="map_note"></p>
+
+                <div class="set-modal-subhead">
+                    <span>Used in Products</span>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="addMmProduct()">Add Product</button>
+                </div>
+                <p class="mm-hint">Select the products that need this material and the quantity required to manufacture one unit.</p>
+                <div class="table-container">
+                    <table class="table set-mini-table" id="mm_products_table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th style="width:150px;">Qty needed</th>
+                                <th style="width:50px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="mm_products_body"></tbody>
+                    </table>
+                </div>
+
+                <div class="set-modal-subhead">
+                    <span>Vendors &amp; Purchase Details</span>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="addMmVendor()">Add Vendor</button>
+                </div>
+                <div id="mm_vendors_body" class="mm-vendors"></div>
+
+                <p class="set-msg" id="mm_msg"></p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" onclick="closeMapModal()">Cancel</button>
-                <button type="button" class="btn btn-primary" id="map_confirm" onclick="mapProductToOrder()">Map to Order</button>
+                <button type="button" class="btn btn-secondary" onclick="closeMaterialModal()">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveMaterial()">Save Material</button>
             </div>
         </div>
     </div>

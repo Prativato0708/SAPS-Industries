@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventory - SAPS Industries</title>
+    <title>Shipments - SAPS Industries</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;550;600;650;700;750&display=swap" rel="stylesheet">
@@ -29,12 +29,12 @@
                     <a href="dashboard.html" class="nav-item"><i class="fas fa-th-large"></i><span>Dashboard</span></a>
                     <a href="quotations.html" class="nav-item"><i class="fas fa-file-alt"></i><span>Quotations</span></a>
                     <a href="orders.html" class="nav-item"><i class="fas fa-shopping-cart"></i><span>Orders</span></a>
-                    <a href="shipments.html" class="nav-item"><i class="fas fa-truck"></i><span>Shipments</span></a>
+                    <a href="shipments.html" class="nav-item active"><i class="fas fa-truck"></i><span>Shipments</span></a>
                 </div>
                 <div class="nav-section">
                     <div class="nav-section-title">Internal Section</div>
                     <a href="materials.html" class="nav-item"><i class="fas fa-cubes"></i><span>Material Management</span></a>
-                    <a href="inventory.html" class="nav-item active"><i class="fas fa-boxes"></i><span>Inventory</span></a>
+                    <a href="inventory.html" class="nav-item"><i class="fas fa-boxes"></i><span>Inventory</span></a>
                     <a href="settings.html" class="nav-item"><i class="fas fa-cog"></i><span>Settings</span></a>
                 </div>
             </nav>
@@ -49,11 +49,11 @@
             </div>
         </aside>
 
-        <main class="main-content">
+        <main class="main-content" id="shipmentsRoot">
             <header class="page-header">
                 <div>
-                    <h1 class="page-title">Inventory</h1>
-                    <p class="page-subtitle">Choose an inventory to view</p>
+                    <h1 class="page-title">Shipments</h1>
+                    <p class="page-subtitle">Dispatch completed orders and track what's on the road</p>
                 </div>
                 <div class="header-actions">
                     <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle light/dark">
@@ -62,22 +62,47 @@
                 </div>
             </header>
 
-            <div class="settings-hub">
-                <a class="card settings-hub-card" href="inventory-products.html">
-                    <div class="settings-hub-icon c-products"><i class="fas fa-box-open"></i></div>
-                    <div class="settings-hub-title">Product Inventory</div>
-                    <div class="settings-hub-desc">View manufactured products and their stock. Map idle products to the ongoing orders that need them.</div>
-                    <span class="settings-hub-foot">Open <i class="fas fa-arrow-right"></i></span>
-                </a>
+            <section class="orders-section">
+                <div class="orders-section-head">
+                    <h2 class="section-title">Ready for Dispatch</h2>
+                    <span class="orders-count" id="shipReadyCount">0</span>
+                </div>
+                <div class="orders-grid" id="ship_ready_grid"></div>
+            </section>
 
-                <a class="card settings-hub-card" href="inventory-raw.html">
-                    <div class="settings-hub-icon c-raw"><i class="fas fa-cubes"></i></div>
-                    <div class="settings-hub-title">Raw Material Inventory</div>
-                    <div class="settings-hub-desc">View raw materials, on-hand stock and reorder status used to manufacture products.</div>
-                    <span class="settings-hub-foot">Open <i class="fas fa-arrow-right"></i></span>
-                </a>
-            </div>
+            <section class="orders-section">
+                <div class="orders-section-head">
+                    <h2 class="section-title">Dispatched</h2>
+                    <span class="orders-count" id="shipDispatchedCount">0</span>
+                </div>
+                <div class="orders-grid" id="ship_dispatched_grid"></div>
+            </section>
         </main>
+    </div>
+
+    <!-- Assign Vehicle Modal -->
+    <div class="modal" id="assignVehicleModal">
+        <div class="modal-overlay" onclick="closeAssignModal()"></div>
+        <div class="modal-content modal-sm">
+            <div class="modal-header">
+                <h3>Assign Vehicle</h3>
+                <button class="modal-close" onclick="closeAssignModal()" aria-label="Close">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" fill="currentColor"/></svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="pv-row" style="margin-bottom:var(--s-4);"><span>Order</span><strong id="assign_order">—</strong></div>
+                <div class="form-group">
+                    <label for="assign_vehicle_select">Delivery vehicle</label>
+                    <select id="assign_vehicle_select"></select>
+                </div>
+                <p class="set-msg" id="assign_note"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeAssignModal()">Cancel</button>
+                <button type="button" class="btn btn-primary" id="assign_confirm" onclick="assignVehicle()">Assign</button>
+            </div>
+        </div>
     </div>
 
     <script src="script.js"></script>
